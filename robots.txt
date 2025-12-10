@@ -1,0 +1,14 @@
+# robots.txt pour Taxi Julien
+
+User-agent: *
+Allow: /
+
+# Sitemap (à créer et ajouter après le déploiement)
+# Sitemap: https://www.votredomaine.fr/sitemap.xml
+
+# Empêcher l'indexation de certains fichiers
+Disallow: /js/
+Disallow: /css/
+Disallow: /.git/
+Disallow: /README.md
+Disallow: /CONFIG_EXEMPLE.md

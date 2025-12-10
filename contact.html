@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contactez Taxi Julien à Martigues. Téléphone, email, WhatsApp. Service disponible 24h/24 et 7j/7.">
+    <title>Contact - Taxi Julien Martigues</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">🚖</span>
+                    <span>Taxi Julien</span>
+                </a>
+                <button class="mobile-menu-toggle" aria-label="Menu">☰</button>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item">
+                        <a href="services.html" class="nav-link">Services</a>
+                        <div class="nav-dropdown">
+                            <a href="conventionné.html" class="nav-dropdown-item">Transport Conventionné</a>
+                            <a href="aeroports-gares.html" class="nav-dropdown-item">Aéroports & Gares</a>
+                            <a href="longues-distances.html" class="nav-dropdown-item">Longues Distances</a>
+                            <a href="courses-classiques.html" class="nav-dropdown-item">Courses Classiques</a>
+                            <a href="mise-a-disposition.html" class="nav-dropdown-item">Mise à Disposition</a>
+                        </div>
+                    </li>
+                    <li><a href="simulateur.html" class="nav-link">Simulateur</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="a-propos.html" class="nav-link">À propos</a></li>
+                    <li><a href="contact.html" class="nav-link active">Contact</a></li>
+                    <li><a href="reservation.html" class="btn btn-primary">Réserver</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="phone-bar">
+        <a href="tel:+33123456789">📞 Appelez-nous : 01 23 45 67 89</a>
+    </div>
+
+    <section class="hero" style="padding: 3rem 0;">
+        <div class="container hero-content">
+            <h1>Contactez-nous</h1>
+            <p class="hero-subtitle">Nous sommes à votre écoute 24h/24</p>
+        </div>
+    </section>
+
+    <!-- MOYENS DE CONTACT -->
+    <section class="section">
+        <div class="container">
+            <div class="cards-grid">
+                <div class="card" style="text-align: center;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📞</span>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Téléphone</h3>
+                    <p style="font-size: 1.3rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 0.5rem;">
+                        <a href="tel:+33123456789" style="color: var(--secondary-color);">01 23 45 67 89</a>
+                    </p>
+                    <p>Service disponible 24h/24, 7j/7</p>
+                    <a href="tel:+33123456789" class="btn btn-primary mt-2">Appeler</a>
+                </div>
+
+                <div class="card" style="text-align: center;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📧</span>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Email</h3>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        <a href="mailto:contact@taxijulien.fr" style="color: var(--secondary-color);">contact@taxijulien.fr</a>
+                    </p>
+                    <p>Réponse sous 24h maximum</p>
+                    <a href="mailto:contact@taxijulien.fr" class="btn btn-primary mt-2">Envoyer un email</a>
+                </div>
+
+                <div class="card" style="text-align: center;">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">💬</span>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">WhatsApp</h3>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">
+                        06 12 34 56 78
+                    </p>
+                    <p>Message ou appel via WhatsApp</p>
+                    <a href="https://wa.me/33612345678" class="btn btn-primary mt-2" style="background: #25d366;">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULAIRE DE CONTACT -->
+    <section class="section" style="background: var(--light-gray);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Envoyez-nous un Message</h2>
+                <p>Pour toute question ou demande d'information</p>
+            </div>
+
+            <div class="simulator-container" style="max-width: 700px;">
+                <form id="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom" class="form-label required">Nom</label>
+                            <input
+                                type="text"
+                                id="nom"
+                                name="nom"
+                                class="form-control"
+                                placeholder="Votre nom"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prenom" class="form-label required">Prénom</label>
+                            <input
+                                type="text"
+                                id="prenom"
+                                name="prenom"
+                                class="form-control"
+                                placeholder="Votre prénom"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email" class="form-label required">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                placeholder="votre@email.fr"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telephone" class="form-label">Téléphone</label>
+                            <input
+                                type="tel"
+                                id="telephone"
+                                name="telephone"
+                                class="form-control"
+                                placeholder="06 12 34 56 78"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sujet" class="form-label required">Sujet</label>
+                        <select id="sujet" name="sujet" class="form-control" required>
+                            <option value="">-- Sélectionnez un sujet --</option>
+                            <option value="reservation">Demande de réservation</option>
+                            <option value="devis">Demande de devis</option>
+                            <option value="conventionne">Question sur le transport conventionné</option>
+                            <option value="reclamation">Réclamation</option>
+                            <option value="autre">Autre question</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="form-label required">Votre message</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            class="form-control"
+                            rows="6"
+                            placeholder="Écrivez votre message ici..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large btn-block">
+                        ✉️ Envoyer le Message
+                    </button>
+                </form>
+
+                <div id="contact-confirmation" class="alert alert-success" style="display: none; margin-top: 2rem;">
+                    <h4 style="margin-bottom: 0.5rem;">✓ Message envoyé avec succès !</h4>
+                    <p>Nous vous répondrons dans les plus brefs délais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INFORMATIONS PRATIQUES -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Informations Pratiques</h2>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📍 Secteur d'Activité</h4>
+                    <p><strong>Basé à Martigues</strong></p>
+                    <p>Intervention dans tout le département des Bouches-du-Rhône (13) et au-delà.</p>
+                </div>
+
+                <div class="card">
+                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🕐 Horaires</h4>
+                    <p><strong>Service 24h/24, 7j/7</strong></p>
+                    <p>Disponible tous les jours, y compris week-end et jours fériés.</p>
+                </div>
+
+                <div class="card">
+                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">💳 Moyens de Paiement</h4>
+                    <ul style="line-height: 1.8;">
+                        <li>✓ Espèces</li>
+                        <li>✓ Carte bancaire</li>
+                        <li>✓ Chèque</li>
+                        <li>✓ Facturation entreprise</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ RAPIDE -->
+    <section class="section" style="background: var(--light-gray);">
+        <div class="container">
+            <div class="section-title">
+                <h2>Questions Fréquentes</h2>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="card" style="margin-bottom: 1rem;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                        Comment réserver un taxi ?
+                    </h4>
+                    <p>
+                        Par téléphone au 01 23 45 67 89, via WhatsApp, par email ou directement sur notre
+                        <a href="reservation.html" style="color: var(--secondary-color); text-decoration: underline;">formulaire de réservation en ligne</a>.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-bottom: 1rem;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                        Combien de temps à l'avance dois-je réserver ?
+                    </h4>
+                    <p>
+                        Idéalement 24 à 48h avant pour garantir la disponibilité. Pour les urgences, appelez-nous directement.
+                    </p>
+                </div>
+
+                <div class="card" style="margin-bottom: 1rem;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                        Puis-je annuler une réservation ?
+                    </h4>
+                    <p>
+                        Oui, contactez-nous dès que possible. Aucun frais d'annulation si prévenu au moins 6h à l'avance.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                        Acceptez-vous les animaux de compagnie ?
+                    </h4>
+                    <p>
+                        Oui, les animaux de compagnie sont acceptés s'ils sont transportés dans une cage ou un sac de transport adapté.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="background: var(--primary); color: white; text-align: center;">
+        <div class="container">
+            <h2 style="color: white; font-size: 2.5rem; margin-bottom: 1rem;">Besoin d'un Taxi Maintenant ?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">Appelez-nous ou réservez en ligne</p>
+            <div class="cta-buttons">
+                <a href="tel:+33123456789" class="btn btn-primary btn-large">📞 Appeler Maintenant</a>
+                <a href="reservation.html" class="btn btn-secondary btn-large">Réserver en Ligne</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Taxi Julien</h3>
+                    <p>Votre taxi conventionné de confiance à Martigues depuis plus de 10 ans.</p>
+                    <p style="margin-top: 1rem;"><strong>Agréé CPAM</strong><br>Licence de taxi professionnelle</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="conventionné.html">Taxi Conventionné</a></li>
+                        <li><a href="services.html">Nos Services</a></li>
+                        <li><a href="simulateur.html">Simulateur de Prix</a></li>
+                        <li><a href="a-propos.html">À Propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>📞 <a href="tel:+33123456789">01 23 45 67 89</a></li>
+                        <li>📧 <a href="mailto:contact@taxijulien.fr">contact@taxijulien.fr</a></li>
+                        <li>📍 Martigues, Bouches-du-Rhône (13)</li>
+                        <li>🕒 Disponible 24h/24, 7j/7</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Horaires</h3>
+                    <p><strong>Service 24/7</strong></p>
+                    <p>Disponible jour et nuit<br>Week-end et jours fériés</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="https://wa.me/33123456789" style="display: inline-block; background: #25d366; color: white; padding: 0.5rem 1rem; border-radius: 5px;">
+                            💬 WhatsApp
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Taxi Julien - Tous droits réservés | <a href="mentions-legales.html">Mentions Légales</a> | <a href="mentions-legales.html#rgpd">Politique de Confidentialité</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="js/contact.js"></script>
+</body>
+</html>

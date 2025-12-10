@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulateur de prix taxi Martigues. Calculez instantanément le tarif de votre course avec distance et horaires précis.">
+    <title>Simulateur de Prix - Taxi Julien Martigues</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">🚖</span>
+                    <span>Taxi Julien</span>
+                </a>
+
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    ☰
+                </button>
+
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Accueil</a></li>
+                    <li class="nav-item">
+                        <a href="services.html" class="nav-link">Services</a>
+                        <div class="nav-dropdown">
+                            <a href="conventionné.html" class="nav-dropdown-item">Transport Conventionné</a>
+                            <a href="aeroports-gares.html" class="nav-dropdown-item">Aéroports & Gares</a>
+                            <a href="longues-distances.html" class="nav-dropdown-item">Longues Distances</a>
+                            <a href="courses-classiques.html" class="nav-dropdown-item">Courses Classiques</a>
+                            <a href="mise-a-disposition.html" class="nav-dropdown-item">Mise à Disposition</a>
+                        </div>
+                    </li>
+                    <li><a href="simulateur.html" class="nav-link active">Simulateur</a></li>
+                    <li><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li><a href="a-propos.html" class="nav-link">À propos</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                    <li><a href="reservation.html" class="btn btn-primary">Réserver</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- BANDEAU TÉLÉPHONE STICKY -->
+    <div class="phone-bar">
+        <a href="tel:+33123456789">
+            📞 Appelez-nous : 01 23 45 67 89
+        </a>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero" style="padding: 3rem 0;">
+        <div class="container hero-content">
+            <h1>Simulateur de Prix</h1>
+            <p class="hero-subtitle">Estimez le tarif de votre course en temps réel</p>
+        </div>
+    </section>
+
+    <!-- SIMULATEUR -->
+    <section class="section">
+        <div class="container" style="max-width: 900px;">
+
+            <div class="alert alert-info">
+                <strong>💡 Estimation précise</strong> Notre simulateur calcule le prix en fonction de la distance réelle (Google Maps), des horaires et des majorations applicables.
+            </div>
+
+            <div class="simulator-container">
+                <form id="simulator-form">
+
+                    <!-- TRAJET -->
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--secondary-color);">
+                        🗺️ Votre Trajet
+                    </h3>
+
+                    <div class="form-group">
+                        <label for="depart" class="form-label required">Adresse de départ</label>
+                        <input
+                            type="text"
+                            id="depart"
+                            name="depart"
+                            class="form-control"
+                            placeholder="Ex: Martigues"
+                            required
+                        >
+                        <small class="form-helper">Entrez une ville ou adresse complète</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrivee" class="form-label required">Adresse d'arrivée</label>
+                        <input
+                            type="text"
+                            id="arrivee"
+                            name="arrivee"
+                            class="form-control"
+                            placeholder="Ex: Aéroport Marseille Provence"
+                            required
+                        >
+                    </div>
+
+                    <!-- HORAIRES -->
+                    <h3 style="color: var(--primary-color); margin: 2rem 0 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--secondary-color);">
+                        🕐 Date et Heure
+                    </h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date" class="form-label required">Date de la course</label>
+                            <input
+                                type="date"
+                                id="date"
+                                name="date"
+                                class="form-control"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="heure" class="form-label required">Heure de prise en charge</label>
+                            <input
+                                type="time"
+                                id="heure"
+                                name="heure"
+                                class="form-control"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="attente" name="attente">
+                            <span>Temps d'attente prévu (cocher si applicable)</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="attente-group" style="display: none;">
+                        <label for="duree-attente" class="form-label">Durée d'attente (en minutes)</label>
+                        <input
+                            type="number"
+                            id="duree-attente"
+                            name="duree-attente"
+                            class="form-control"
+                            min="0"
+                            max="300"
+                            step="15"
+                            placeholder="60"
+                        >
+                        <small class="form-helper">Tarif attente : 34,60€/heure</small>
+                    </div>
+
+                    <!-- BOUTON CALCUL -->
+                    <button type="submit" class="btn btn-primary btn-large btn-block" id="calculate-btn">
+                        💰 Calculer le Prix
+                    </button>
+
+                </form>
+
+                <!-- RÉSULTAT -->
+                <div class="price-result" id="price-result">
+                    <h3>Estimation de votre course</h3>
+
+                    <div class="price-amount" id="price-amount">45,00 €</div>
+
+                    <div id="tarif-info" style="margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,0.2); border-radius: 10px;">
+                        <p id="tarif-applique" style="margin: 0; font-size: 0.95rem;"></p>
+                    </div>
+
+                    <div class="price-details">
+                        <div class="price-detail-item">
+                            <div class="price-detail-label">Distance</div>
+                            <div class="price-detail-value" id="distance-value">35 km</div>
+                        </div>
+                        <div class="price-detail-item">
+                            <div class="price-detail-label">Durée</div>
+                            <div class="price-detail-value" id="duration-value">28 min</div>
+                        </div>
+                    </div>
+
+                    <div id="price-breakdown" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.2); border-radius: 10px; text-align: left; font-size: 0.9rem;">
+                        <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1rem;">Détail du calcul :</h4>
+                        <div id="breakdown-content"></div>
+                    </div>
+
+                    <a href="reservation.html" class="btn btn-secondary btn-large mt-3">
+                        ✓ Réserver ce Trajet
+                    </a>
+
+                    <p style="margin-top: 1rem; font-size: 0.85rem; opacity: 0.9;">
+                        * Tarif indicatif. Le prix final peut varier selon les conditions de circulation et d'éventuels détours.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- INFORMATIONS TARIFAIRES -->
+            <div style="margin-top: 3rem; background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md);">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; text-align: center;">
+                    📋 Grille Tarifaire
+                </h3>
+
+                <div class="cards-grid">
+                    <div>
+                        <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">Tarifs de Base</h4>
+                        <ul style="line-height: 2;">
+                            <li>• <strong>Tarif minimal :</strong> 8,00 €</li>
+                            <li>• <strong>Prise en charge :</strong> 2,35 €</li>
+                            <li>• <strong>Heure d'attente :</strong> 34,60 €/h</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">Tarifs au Kilomètre</h4>
+                        <ul style="line-height: 2;">
+                            <li>• <strong>Tarif A (jour semaine) :</strong> 1,11 €/km</li>
+                            <li>• <strong>Tarif B (nuit semaine) :</strong> 1,44 €/km</li>
+                            <li>• <strong>Tarif C (jour weekend) :</strong> 2,22 €/km</li>
+                            <li>• <strong>Tarif D (nuit weekend) :</strong> 2,88 €/km</li>
+                        </ul>
+                        <p style="font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem;">
+                            Nuit : 19h00 - 7h00 | Weekend : samedi, dimanche et jours fériés
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">Forfaits Spéciaux</h4>
+                        <ul style="line-height: 2;">
+                            <li>• <strong>Martigues → Aéroport Marseille</strong>
+                                <br><span style="font-size: 0.9rem; color: var(--gray);">Jour : 80€ | Nuit : 100€</span>
+                            </li>
+                            <li>• <strong>Martigues → Aix TGV</strong>
+                                <br><span style="font-size: 0.9rem; color: var(--gray);">Jour : 80€ | Nuit : 100€</span>
+                            </li>
+                            <li>• <strong>Martigues → Gare St-Charles</strong>
+                                <br><span style="font-size: 0.9rem; color: var(--gray);">Jour : 95€ | Nuit : 120€</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 2rem;">
+                    <strong>ℹ️ Bon à savoir :</strong> Pour les trajets conventionnés CPAM, le remboursement est basé sur les tarifs réglementaires en vigueur.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Taxi Julien</h3>
+                    <p>Votre taxi conventionné de confiance à Martigues depuis plus de 10 ans.</p>
+                    <p style="margin-top: 1rem;">
+                        <strong>Agréé CPAM</strong><br>
+                        Licence de taxi professionnelle
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="conventionné.html">Taxi Conventionné</a></li>
+                        <li><a href="services.html">Nos Services</a></li>
+                        <li><a href="simulateur.html">Simulateur de Prix</a></li>
+                        <li><a href="a-propos.html">À Propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>📞 <a href="tel:+33123456789">01 23 45 67 89</a></li>
+                        <li>📧 <a href="mailto:contact@taxijulien.fr">contact@taxijulien.fr</a></li>
+                        <li>📍 Martigues, Bouches-du-Rhône (13)</li>
+                        <li>🕒 Disponible 24h/24, 7j/7</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Horaires</h3>
+                    <p><strong>Service 24/7</strong></p>
+                    <p>Disponible jour et nuit<br>
+                    Week-end et jours fériés</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="https://wa.me/33123456789" style="display: inline-block; background: #25d366; color: white; padding: 0.5rem 1rem; border-radius: 5px; margin-top: 0.5rem;">
+                            💬 WhatsApp
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Taxi Julien - Tous droits réservés | <a href="mentions-legales.html">Mentions Légales</a> | <a href="mentions-legales.html#rgpd">Politique de Confidentialité</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/simulateur.js"></script>
+
+</body>
+</html>
