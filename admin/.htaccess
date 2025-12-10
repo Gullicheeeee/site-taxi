@@ -1,37 +1,14 @@
 # Protection du dossier admin
-
-# Bloquer l'accès direct aux fichiers sensibles
-<FilesMatch "(config\.php|database\.sql)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Bloquer l'accès aux fichiers de sauvegarde
-<FilesMatch "\.(bak|backup|old|tmp|log)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Activer la réécriture d'URL si disponible
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /admin/
-</IfModule>
-
-# Empêcher l'affichage du contenu des dossiers
 Options -Indexes
 
-# Protection XSS
-<IfModule mod_headers.c>
-    Header set X-XSS-Protection "1; mode=block"
-    Header set X-Content-Type-Options "nosniff"
-    Header set X-Frame-Options "SAMEORIGIN"
-</IfModule>
+# Protection des fichiers sensibles
+<FilesMatch "\.(sqlite|db|sql|log)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
 
-# Limiter la taille des uploads (si mod_php est actif)
-<IfModule mod_php7.c>
-    php_value upload_max_filesize 5M
-    php_value post_max_size 6M
-    php_value max_execution_time 300
-    php_value max_input_time 300
+# Protection du dossier data
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^../data/ - [F,L]
 </IfModule>

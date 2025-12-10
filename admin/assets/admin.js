@@ -1,112 +1,64 @@
-// ADMIN.JS - Back Office Taxi Julien
+/**
+ * BACK-OFFICE TAXI JULIEN - JavaScript
+ */
 
-document.addEventListener('DOMContentLoaded', function() {
-
-    // Auto-hide alerts after 5 seconds
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        setTimeout(() => {
-            alert.style.transition = 'opacity 0.3s';
-            alert.style.opacity = '0';
-            setTimeout(() => alert.remove(), 300);
-        }, 5000);
-    });
-
-    // Confirm delete actions
-    const deleteButtons = document.querySelectorAll('[data-confirm]');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            const message = this.dataset.confirm || 'Êtes-vous sûr de vouloir supprimer cet élément ?';
-            if (!confirm(message)) {
-                e.preventDefault();
-            }
-        });
-    });
-
-    // Character counter for textareas
-    const textareas = document.querySelectorAll('[data-maxlength]');
-    textareas.forEach(textarea => {
-        const maxLength = textarea.dataset.maxlength;
-        const counter = document.createElement('div');
-        counter.className = 'form-help';
-        counter.textContent = `${textarea.value.length} / ${maxLength} caractères`;
-        textarea.parentNode.appendChild(counter);
-
-        textarea.addEventListener('input', function() {
-            counter.textContent = `${this.value.length} / ${maxLength} caractères`;
-            if (this.value.length > maxLength) {
-                counter.style.color = 'var(--danger)';
-            } else {
-                counter.style.color = 'var(--gray-500)';
-            }
-        });
-    });
-
-    // Image preview
-    const imageInputs = document.querySelectorAll('input[type="file"][accept*="image"]');
-    imageInputs.forEach(input => {
-        input.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById(input.dataset.preview);
-                    if (preview) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    });
-
-    // Slug generator from title
-    const titleInput = document.getElementById('title');
-    const slugInput = document.getElementById('slug');
-
-    if (titleInput && slugInput) {
-        titleInput.addEventListener('input', function() {
-            if (!slugInput.dataset.manuallyEdited) {
-                slugInput.value = generateSlug(this.value);
-            }
-        });
-
-        slugInput.addEventListener('input', function() {
-            this.dataset.manuallyEdited = 'true';
-        });
-    }
-
-    // Rich text editor (simple implementation)
-    const editorToolbars = document.querySelectorAll('.editor-toolbar');
-    editorToolbars.forEach(toolbar => {
-        const buttons = toolbar.querySelectorAll('.editor-btn');
-        const textarea = toolbar.nextElementSibling;
-
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const command = this.dataset.command;
-                applyTextFormat(textarea, command);
-            });
-        });
-    });
-
-    // Table row click to edit
-    const editableRows = document.querySelectorAll('[data-edit-url]');
-    editableRows.forEach(row => {
-        row.style.cursor = 'pointer';
-        row.addEventListener('click', function(e) {
-            if (!e.target.closest('button') && !e.target.closest('a')) {
-                window.location.href = this.dataset.editUrl;
-            }
-        });
-    });
-
+// Auto-dismiss des alertes
+document.querySelectorAll('.alert').forEach(alert => {
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-10px)';
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
 });
 
-// Helper Functions
+// Confirmation de suppression
+document.querySelectorAll('[data-confirm]').forEach(el => {
+    el.addEventListener('click', (e) => {
+        if (!confirm(el.dataset.confirm || 'Êtes-vous sûr ?')) {
+            e.preventDefault();
+        }
+    });
+});
 
+// Toggle mobile menu
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+}
+
+// Fermer sidebar quand on clique en dehors (mobile)
+document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768 && sidebar && !sidebar.contains(e.target) && !mobileMenuToggle?.contains(e.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+
+// Auto-resize textarea
+document.querySelectorAll('textarea[data-autoresize]').forEach(textarea => {
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
+});
+
+// Copy to clipboard helper
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Afficher une notification
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success';
+        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999;';
+        toast.textContent = 'Copié !';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    });
+}
+
+// Slug generator
 function generateSlug(text) {
     return text
         .toLowerCase()
@@ -116,67 +68,14 @@ function generateSlug(text) {
         .replace(/^-+|-+$/g, '');
 }
 
-function applyTextFormat(textarea, command) {
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    let formattedText = selectedText;
+// Auto-generate slug from title
+const titleInput = document.querySelector('input[name="title"]');
+const slugInput = document.querySelector('input[name="slug"]');
 
-    switch (command) {
-        case 'bold':
-            formattedText = `**${selectedText}**`;
-            break;
-        case 'italic':
-            formattedText = `*${selectedText}*`;
-            break;
-        case 'h2':
-            formattedText = `## ${selectedText}`;
-            break;
-        case 'h3':
-            formattedText = `### ${selectedText}`;
-            break;
-        case 'link':
-            const url = prompt('URL du lien:');
-            if (url) {
-                formattedText = `[${selectedText}](${url})`;
-            }
-            break;
-        case 'list':
-            formattedText = `- ${selectedText}`;
-            break;
-    }
-
-    textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
-    textarea.focus();
-    textarea.setSelectionRange(start, start + formattedText.length);
-}
-
-// Copy to clipboard
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert('Copié dans le presse-papier !');
+if (titleInput && slugInput && !slugInput.value) {
+    titleInput.addEventListener('input', () => {
+        slugInput.value = generateSlug(titleInput.value);
     });
 }
 
-// AJAX helper
-async function ajaxRequest(url, method = 'GET', data = null) {
-    const options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    };
-
-    if (data && method !== 'GET') {
-        options.body = JSON.stringify(data);
-    }
-
-    try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        console.error('AJAX Error:', error);
-        throw error;
-    }
-}
+console.log('Back-office Taxi Julien chargé');

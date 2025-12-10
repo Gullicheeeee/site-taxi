@@ -1,6 +1,6 @@
-            </div>
+            </div><!-- .content -->
         </main>
-    </div>
+    </div><!-- .admin-wrapper -->
 
     <script src="assets/admin.js"></script>
 </body>

@@ -1,0 +1,3 @@
+# Protéger le dossier data - Aucun accès web
+Order Allow,Deny
+Deny from all

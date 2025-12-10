@@ -1,221 +1,213 @@
 <?php
-define('ADMIN_LOADED', true);
+$pageTitle = 'Modifier la Page';
 require_once 'config.php';
+requireLogin();
 
-$activePage = 'pages';
-$pageId = $_GET['id'] ?? 0;
-
-if (!$pageId) {
-    header('Location: pages.php');
-    exit;
-}
+$db = getDB();
+$id = (int)($_GET['id'] ?? 0);
 
 // Récupérer la page
-try {
-    $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM pages WHERE id = ?");
-    $stmt->execute([$pageId]);
-    $page = $stmt->fetch();
+$stmt = $db->prepare("SELECT * FROM pages WHERE id = ?");
+$stmt->execute([$id]);
+$page = $stmt->fetch();
 
-    if (!$page) {
-        setFlash('error', 'Page introuvable');
-        header('Location: pages.php');
-        exit;
-    }
-
-    // Récupérer les sections de la page
-    $stmt = $db->prepare("SELECT * FROM page_sections WHERE page_id = ? ORDER BY display_order");
-    $stmt->execute([$pageId]);
-    $sections = $stmt->fetchAll();
-} catch (PDOException $e) {
-    setFlash('error', 'Erreur lors du chargement de la page');
+if (!$page) {
+    setFlash('danger', 'Page non trouvée');
     header('Location: pages.php');
     exit;
 }
 
-$pageTitle = 'Éditer : ' . $page['title'];
-
-$errors = [];
-
+// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $formData = [
-        'title' => trim($_POST['title'] ?? ''),
-        'meta_title' => trim($_POST['meta_title'] ?? ''),
-        'meta_description' => trim($_POST['meta_description'] ?? ''),
-        'meta_keywords' => trim($_POST['meta_keywords'] ?? ''),
-        'is_published' => isset($_POST['is_published']) ? 1 : 0
-    ];
+    $meta_title = trim($_POST['meta_title'] ?? '');
+    $meta_description = trim($_POST['meta_description'] ?? '');
+    $meta_keywords = trim($_POST['meta_keywords'] ?? '');
+    $og_title = trim($_POST['og_title'] ?? '');
+    $og_description = trim($_POST['og_description'] ?? '');
 
-    // Validation
-    if (empty($formData['title'])) {
-        $errors[] = 'Le titre est obligatoire';
+    $stmt = $db->prepare("UPDATE pages SET
+        meta_title = ?,
+        meta_description = ?,
+        meta_keywords = ?,
+        og_title = ?,
+        og_description = ?,
+        updated_at = datetime('now')
+        WHERE id = ?");
+
+    $stmt->execute([
+        $meta_title,
+        $meta_description,
+        $meta_keywords,
+        $og_title,
+        $og_description,
+        $id
+    ]);
+
+    // Mettre à jour le fichier HTML
+    updateHtmlFile($page['filename'], [
+        'meta_title' => $meta_title,
+        'meta_description' => $meta_description,
+        'meta_keywords' => $meta_keywords,
+        'og_title' => $og_title ?: $meta_title,
+        'og_description' => $og_description ?: $meta_description,
+    ]);
+
+    setFlash('success', 'Page mise à jour avec succès !');
+    header('Location: pages.php');
+    exit;
+}
+
+// Fonction pour mettre à jour le fichier HTML
+function updateHtmlFile($filename, $data) {
+    $filepath = __DIR__ . '/../' . $filename;
+
+    if (!file_exists($filepath)) {
+        return false;
     }
 
-    if (empty($errors)) {
-        try {
-            $stmt = $db->prepare("
-                UPDATE pages SET
-                    title = ?,
-                    meta_title = ?,
-                    meta_description = ?,
-                    meta_keywords = ?,
-                    is_published = ?,
-                    updated_by = ?
-                WHERE id = ?
-            ");
+    $html = file_get_contents($filepath);
 
-            $stmt->execute([
-                $formData['title'],
-                $formData['meta_title'],
-                $formData['meta_description'],
-                $formData['meta_keywords'],
-                $formData['is_published'],
-                $_SESSION['admin_id'],
-                $pageId
-            ]);
+    // Mettre à jour le title
+    if (!empty($data['meta_title'])) {
+        $html = preg_replace(
+            '/<title>.*?<\/title>/s',
+            '<title>' . htmlspecialchars($data['meta_title']) . '</title>',
+            $html
+        );
+    }
 
-            // Recharger la page
-            $stmt = $db->prepare("SELECT * FROM pages WHERE id = ?");
-            $stmt->execute([$pageId]);
-            $page = $stmt->fetch();
+    // Mettre à jour meta description
+    if (!empty($data['meta_description'])) {
+        $html = preg_replace(
+            '/<meta\s+name="description"\s+content="[^"]*"[^>]*>/i',
+            '<meta name="description" content="' . htmlspecialchars($data['meta_description']) . '">',
+            $html
+        );
+    }
 
-            setFlash('success', 'Page mise à jour avec succès');
-        } catch (PDOException $e) {
-            $errors[] = 'Erreur lors de la mise à jour : ' . $e->getMessage();
+    // Mettre à jour meta keywords
+    if (!empty($data['meta_keywords'])) {
+        if (preg_match('/<meta\s+name="keywords"/i', $html)) {
+            $html = preg_replace(
+                '/<meta\s+name="keywords"\s+content="[^"]*"[^>]*>/i',
+                '<meta name="keywords" content="' . htmlspecialchars($data['meta_keywords']) . '">',
+                $html
+            );
+        } else {
+            // Ajouter si n'existe pas
+            $html = preg_replace(
+                '/(<meta\s+name="description"[^>]*>)/i',
+                '$1' . "\n" . '    <meta name="keywords" content="' . htmlspecialchars($data['meta_keywords']) . '">',
+                $html
+            );
         }
     }
+
+    // Mettre à jour OG title
+    if (!empty($data['og_title'])) {
+        $html = preg_replace(
+            '/<meta\s+property="og:title"\s+content="[^"]*"[^>]*>/i',
+            '<meta property="og:title" content="' . htmlspecialchars($data['og_title']) . '">',
+            $html
+        );
+    }
+
+    // Mettre à jour OG description
+    if (!empty($data['og_description'])) {
+        $html = preg_replace(
+            '/<meta\s+property="og:description"\s+content="[^"]*"[^>]*>/i',
+            '<meta property="og:description" content="' . htmlspecialchars($data['og_description']) . '">',
+            $html
+        );
+    }
+
+    file_put_contents($filepath, $html);
+    return true;
 }
 
 require_once 'includes/header.php';
 ?>
 
-<?php if (!empty($errors)): ?>
-    <div class="alert alert-danger">
-        <strong>Erreurs :</strong>
-        <ul style="margin: 0.5rem 0 0 1.5rem;">
-            <?php foreach ($errors as $error): ?>
-                <li><?= e($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
+<div class="page-header d-flex justify-between align-center">
+    <div>
+        <h2 class="page-title">Modifier : <?= e($page['title']) ?></h2>
+        <p class="page-subtitle">Fichier : <?= e($page['filename']) ?></p>
     </div>
-<?php endif; ?>
+    <a href="pages.php" class="btn btn-secondary">← Retour</a>
+</div>
 
 <form method="POST">
-    <div class="card mb-3">
-        <div class="card-header flex-between">
-            <h2 class="card-title">Informations Générales</h2>
-            <code><?= e($page['slug']) ?>.html</code>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <label for="title" class="form-label required">Titre de la page</label>
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    class="form-input"
-                    value="<?= e($page['title']) ?>"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                    <input
-                        type="checkbox"
-                        name="is_published"
-                        value="1"
-                        <?= $page['is_published'] ? 'checked' : '' ?>
-                    >
-                    <span>Page publiée</span>
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mb-3">
+    <div class="card">
         <div class="card-header">
-            <h2 class="card-title">SEO & Métadonnées</h2>
+            <h3 class="card-title">Balises Meta (SEO)</h3>
         </div>
         <div class="card-body">
             <div class="form-group">
-                <label for="meta_title" class="form-label">Titre Meta (SEO)</label>
-                <input
-                    type="text"
-                    id="meta_title"
-                    name="meta_title"
-                    class="form-input"
-                    value="<?= e($page['meta_title']) ?>"
-                    placeholder="Titre optimisé pour les moteurs de recherche"
-                    data-maxlength="60"
-                >
-                <div class="form-help">Recommandé : 50-60 caractères</div>
+                <label class="form-label">Meta Title</label>
+                <input type="text" name="meta_title" class="form-control"
+                       value="<?= e($page['meta_title']) ?>"
+                       maxlength="70">
+                <p class="form-help">
+                    <span id="title-count"><?= strlen($page['meta_title'] ?? '') ?></span>/60 caractères (optimal: 50-60)
+                </p>
             </div>
 
             <div class="form-group">
-                <label for="meta_description" class="form-label">Description Meta (SEO)</label>
-                <textarea
-                    id="meta_description"
-                    name="meta_description"
-                    class="form-textarea"
-                    rows="3"
-                    placeholder="Description de la page pour les résultats de recherche"
-                    data-maxlength="160"
-                ><?= e($page['meta_description']) ?></textarea>
-                <div class="form-help">Recommandé : 150-160 caractères</div>
+                <label class="form-label">Meta Description</label>
+                <textarea name="meta_description" class="form-control" rows="3"
+                          maxlength="200"><?= e($page['meta_description']) ?></textarea>
+                <p class="form-help">
+                    <span id="desc-count"><?= strlen($page['meta_description'] ?? '') ?></span>/160 caractères (optimal: 150-160)
+                </p>
             </div>
 
             <div class="form-group">
-                <label for="meta_keywords" class="form-label">Mots-clés (optionnel)</label>
-                <input
-                    type="text"
-                    id="meta_keywords"
-                    name="meta_keywords"
-                    class="form-input"
-                    value="<?= e($page['meta_keywords']) ?>"
-                    placeholder="taxi, martigues, transport, conventionné..."
-                >
-                <div class="form-help">Séparez les mots-clés par des virgules</div>
+                <label class="form-label">Meta Keywords</label>
+                <input type="text" name="meta_keywords" class="form-control"
+                       value="<?= e($page['meta_keywords']) ?>">
+                <p class="form-help">Mots-clés séparés par des virgules</p>
             </div>
         </div>
     </div>
 
-    <?php if (count($sections) > 0): ?>
-        <div class="card mb-3">
-            <div class="card-header">
-                <h2 class="card-title">Sections de Contenu</h2>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Open Graph (Réseaux sociaux)</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-label">OG Title</label>
+                <input type="text" name="og_title" class="form-control"
+                       value="<?= e($page['og_title']) ?>">
+                <p class="form-help">Titre affiché sur Facebook/LinkedIn (laissez vide pour utiliser le meta title)</p>
             </div>
-            <div class="card-body">
-                <p style="margin-bottom: 1rem; color: var(--gray-600);">
-                    Les sections ci-dessous sont gérées via la table <code>page_sections</code>.
-                    Vous pouvez les éditer via une interface dédiée ou directement en base de données.
-                </p>
-                <div style="display: grid; gap: 1rem;">
-                    <?php foreach ($sections as $section): ?>
-                        <div style="border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1rem; background: var(--gray-50);">
-                            <strong><?= e($section['section_key']) ?></strong>
-                            <?php if ($section['section_title']): ?>
-                                <br><small><?= e($section['section_title']) ?></small>
-                            <?php endif; ?>
-                            <br><span class="badge badge-info mt-1"><?= e($section['section_type']) ?></span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+
+            <div class="form-group">
+                <label class="form-label">OG Description</label>
+                <textarea name="og_description" class="form-control" rows="2"><?= e($page['og_description']) ?></textarea>
+                <p class="form-help">Description affichée sur les réseaux sociaux</p>
             </div>
         </div>
-    <?php endif; ?>
+    </div>
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary btn-lg">
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
             💾 Enregistrer les modifications
         </button>
-        <a href="pages.php" class="btn btn-secondary btn-lg">
-            Retour à la liste
-        </a>
-        <a href="../<?= e($page['slug']) ?>.html" target="_blank" class="btn btn-secondary btn-lg">
+        <a href="../<?= e($page['filename']) ?>" target="_blank" class="btn btn-secondary">
             👁️ Voir la page
         </a>
     </div>
 </form>
+
+<script>
+// Compteur de caractères
+document.querySelector('input[name="meta_title"]').addEventListener('input', function() {
+    document.getElementById('title-count').textContent = this.value.length;
+});
+document.querySelector('textarea[name="meta_description"]').addEventListener('input', function() {
+    document.getElementById('desc-count').textContent = this.value.length;
+});
+</script>
 
 <?php require_once 'includes/footer.php'; ?>
