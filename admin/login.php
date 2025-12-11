@@ -14,25 +14,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if ($username && $password) {
-        $db = getDB();
-        $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch();
+        // Vérifier dans Supabase
+        $result = supabase()->select('admins', 'username=eq.' . urlencode($username));
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_id'] = $user['id'];
-            $_SESSION['admin_username'] = $user['username'];
+        if ($result['success'] && !empty($result['data'])) {
+            $admin = $result['data'][0];
 
-            // Mettre à jour last_login
-            $stmt = $db->prepare("UPDATE users SET last_login = datetime('now') WHERE id = ?");
-            $stmt->execute([$user['id']]);
+            if (password_verify($password, $admin['password_hash'])) {
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['admin_id'] = $admin['id'];
+                $_SESSION['admin_username'] = $admin['username'];
 
-            header('Location: index.php');
-            exit;
-        } else {
-            $error = 'Identifiants incorrects';
+                // Mettre à jour last_login
+                supabase()->update('admins', 'id=eq.' . $admin['id'], [
+                    'last_login' => date('c')
+                ]);
+
+                header('Location: index.php');
+                exit;
+            }
         }
+        $error = 'Identifiants incorrects';
     } else {
         $error = 'Veuillez remplir tous les champs';
     }
@@ -49,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="login-page">
     <div class="login-box">
         <div class="login-logo">
-            <h1>🚖 Taxi Julien</h1>
+            <h1>Taxi Julien</h1>
             <p style="color: #718096; margin-top: 0.5rem;">Back-Office Administration</p>
         </div>
 

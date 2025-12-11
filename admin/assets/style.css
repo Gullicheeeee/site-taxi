@@ -95,9 +95,11 @@ body {
 }
 
 .nav-link.active {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.2);
     color: white;
     border-left-color: var(--secondary);
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 var(--secondary);
 }
 
 .nav-link .icon {

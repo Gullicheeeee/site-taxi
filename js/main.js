@@ -337,6 +337,84 @@ function toRad(degrees) {
 }
 
 // ============================================
+// LAZY LOADING IMAGES (Performance SEO)
+// ============================================
+
+/**
+ * Implémentation du lazy loading natif avec fallback
+ */
+function initLazyLoading() {
+    // Ajouter loading="lazy" à toutes les images sans cet attribut
+    document.querySelectorAll('img:not([loading])').forEach(img => {
+        // Ne pas appliquer aux images dans le viewport initial
+        const rect = img.getBoundingClientRect();
+        if (rect.top > window.innerHeight) {
+            img.setAttribute('loading', 'lazy');
+            img.setAttribute('decoding', 'async');
+        }
+    });
+
+    // Fallback pour les navigateurs qui ne supportent pas loading="lazy"
+    if (!('loading' in HTMLImageElement.prototype)) {
+        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+
+        const lazyLoad = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '200px 0px'
+        });
+
+        lazyImages.forEach(img => lazyLoad.observe(img));
+    }
+}
+
+// Initialiser le lazy loading au chargement
+document.addEventListener('DOMContentLoaded', initLazyLoading);
+
+// ============================================
+// PRELOAD CRITICAL RESOURCES
+// ============================================
+
+/**
+ * Preload des ressources critiques pour les liens survolés
+ */
+function initLinkPreload() {
+    const preloadedUrls = new Set();
+
+    document.querySelectorAll('a[href]').forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            const href = this.getAttribute('href');
+
+            // Ne preload que les liens internes non-ancres
+            if (href &&
+                !href.startsWith('#') &&
+                !href.startsWith('tel:') &&
+                !href.startsWith('mailto:') &&
+                !href.startsWith('http') &&
+                !preloadedUrls.has(href)) {
+
+                const preloadLink = document.createElement('link');
+                preloadLink.rel = 'prefetch';
+                preloadLink.href = href;
+                document.head.appendChild(preloadLink);
+                preloadedUrls.add(href);
+            }
+        }, { once: true });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initLinkPreload);
+
+// ============================================
 // GESTION DES COOKIES (RGPD)
 // ============================================
 

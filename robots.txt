@@ -1,14 +1,27 @@
 # robots.txt pour Taxi Julien
+# https://www.taxijulien.fr
 
 User-agent: *
 Allow: /
 
-# Sitemap (à créer et ajouter après le déploiement)
-# Sitemap: https://www.votredomaine.fr/sitemap.xml
+# Sitemap
+Sitemap: https://www.taxijulien.fr/sitemap.xml
 
-# Empêcher l'indexation de certains fichiers
+# Bloquer les ressources non-essentielles
+Disallow: /admin/
 Disallow: /js/
 Disallow: /css/
 Disallow: /.git/
 Disallow: /README.md
 Disallow: /CONFIG_EXEMPLE.md
+Disallow: /*.json$
+
+# Autoriser les bots Google specifiques
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Parametres de crawl (optionnel)
+Crawl-delay: 1
