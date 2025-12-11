@@ -1,0 +1,31 @@
+{
+    "site_name": "Taxi Julien",
+    "phone": "01 23 45 67 89",
+    "phone_link": "+33123456789",
+    "email": "contact@taxijulien.fr",
+    "address": "Martigues, Bouches-du-Rhone (13)",
+    "hours": "24h/24, 7j/7",
+    "whatsapp": "33123456789",
+    "social": {
+        "facebook": "https://facebook.com/taxijulien",
+        "instagram": ""
+    },
+    "seo": {
+        "title_suffix": " | Taxi Julien Martigues",
+        "default_og_image": "/images/og-image.jpg"
+    },
+    "business": {
+        "name": "Taxi Julien",
+        "legal_name": "Taxi Julien SARL",
+        "siret": "",
+        "license": "Licence Taxi Professionnelle",
+        "cpam_agreement": true
+    },
+    "geo": {
+        "region": "FR-13",
+        "city": "Martigues",
+        "postal_code": "13500",
+        "latitude": "43.4051",
+        "longitude": "5.0476"
+    }
+}
