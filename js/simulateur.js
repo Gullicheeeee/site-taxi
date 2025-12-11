@@ -1,7 +1,21 @@
 /**
  * TAXI JULIEN - Simulateur de Prix
  * Calcul précis des tarifs avec Google Maps Distance Matrix API
+ *
+ * LOGIQUE MÉTIER:
+ * - Tarifs A/B/C/D selon jour/heure
+ * - Forfaits pour destinations courantes (aéroport, gares)
+ * - Fourchette de prix (+/- 10%) pour conditions variables
  */
+
+// ============================================
+// FLAG DEBUG - Mettre à false en production
+// ============================================
+const DEBUG = false;
+
+function log(...args) {
+    if (DEBUG) console.log('[Simulateur]', ...args);
+}
 
 // ============================================
 // CONFIGURATION GOOGLE MAPS API
@@ -47,7 +61,11 @@ const TARIFS = {
         // Gare Saint-Charles
         'gare_st_charles_jour': 95.00,
         'gare_st_charles_nuit': 120.00
-    }
+    },
+
+    // Marge pour fourchette de prix (conditions de circulation variables)
+    margeMin: 0.90,  // -10%
+    margeMax: 1.10   // +10%
 };
 
 // Jours fériés français 2024-2025 (à mettre à jour chaque année)
@@ -64,12 +82,18 @@ const JOURS_FERIES = [
 // INITIALISATION
 // ============================================
 
+let autocompleteDepart = null;
+let autocompleteArrivee = null;
+let simulationStarted = false;
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('simulator-form');
     const dateInput = document.getElementById('date');
     const heureInput = document.getElementById('heure');
     const attenteCheckbox = document.getElementById('attente');
     const attenteGroup = document.getElementById('attente-group');
+    const departInput = document.getElementById('depart');
+    const arriveeInput = document.getElementById('arrivee');
 
     // Définir la date d'aujourd'hui par défaut
     if (dateInput) {
@@ -99,23 +123,202 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             calculerPrix();
         });
+
+        // Tracking: simulation_start quand l'utilisateur commence à interagir
+        [departInput, arriveeInput].forEach(input => {
+            if (input) {
+                input.addEventListener('focus', function() {
+                    if (!simulationStarted) {
+                        simulationStarted = true;
+                        trackEvent('simulation_start', {
+                            page: 'simulateur'
+                        });
+                    }
+                }, { once: true });
+            }
+        });
     }
+
+    // Initialiser Google Places Autocomplete si l'API est chargée
+    initGooglePlacesAutocomplete();
+
+    // Restaurer les données sauvegardées
+    restoreSimulatorData();
+
+    // Sauvegarder les données à chaque modification
+    setupAutoSave();
+
+    log('Simulateur initialisé');
 });
+
+// ============================================
+// GOOGLE PLACES AUTOCOMPLETE
+// ============================================
+
+function initGooglePlacesAutocomplete() {
+    // Vérifier si l'API Google est chargée
+    if (typeof google === 'undefined' || !google.maps || !google.maps.places) {
+        log('Google Places API non chargée - mode dégradé');
+        return;
+    }
+
+    const departInput = document.getElementById('depart');
+    const arriveeInput = document.getElementById('arrivee');
+
+    // Options pour la France et les environs de Martigues
+    const options = {
+        componentRestrictions: { country: 'fr' },
+        fields: ['formatted_address', 'geometry', 'name'],
+        types: ['geocode', 'establishment']
+    };
+
+    // Biais vers la région de Martigues (Bouches-du-Rhône)
+    const martiguesBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(43.25, 4.75),  // SW
+        new google.maps.LatLng(43.55, 5.45)   // NE
+    );
+
+    try {
+        if (departInput) {
+            autocompleteDepart = new google.maps.places.Autocomplete(departInput, options);
+            autocompleteDepart.setBounds(martiguesBounds);
+
+            autocompleteDepart.addListener('place_changed', function() {
+                const place = autocompleteDepart.getPlace();
+                if (place && place.formatted_address) {
+                    departInput.value = place.formatted_address;
+                    saveSimulatorData();
+                }
+            });
+        }
+
+        if (arriveeInput) {
+            autocompleteArrivee = new google.maps.places.Autocomplete(arriveeInput, options);
+            autocompleteArrivee.setBounds(martiguesBounds);
+
+            autocompleteArrivee.addListener('place_changed', function() {
+                const place = autocompleteArrivee.getPlace();
+                if (place && place.formatted_address) {
+                    arriveeInput.value = place.formatted_address;
+                    saveSimulatorData();
+                }
+            });
+        }
+
+        log('Google Places Autocomplete initialisé');
+    } catch (error) {
+        console.error('Erreur initialisation Google Places:', error);
+    }
+}
+
+// Fonction globale appelée par le callback Google Maps
+window.initGooglePlaces = function() {
+    initGooglePlacesAutocomplete();
+};
+
+// ============================================
+// SAUVEGARDE LOCALSTORAGE
+// ============================================
+
+const STORAGE_KEY_SIMULATOR = 'taxijulien_simulator_data';
+
+function saveSimulatorData() {
+    try {
+        const data = {
+            depart: document.getElementById('depart')?.value || '',
+            arrivee: document.getElementById('arrivee')?.value || '',
+            date: document.getElementById('date')?.value || '',
+            heure: document.getElementById('heure')?.value || '',
+            attente: document.getElementById('attente')?.checked || false,
+            dureeAttente: document.getElementById('duree-attente')?.value || '',
+            timestamp: Date.now()
+        };
+        localStorage.setItem(STORAGE_KEY_SIMULATOR, JSON.stringify(data));
+        log('Données simulateur sauvegardées');
+    } catch (error) {
+        log('Erreur sauvegarde localStorage:', error);
+    }
+}
+
+function restoreSimulatorData() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY_SIMULATOR);
+        if (!saved) return;
+
+        const data = JSON.parse(saved);
+
+        // Ne restaurer que si les données ont moins de 24h
+        const maxAge = 24 * 60 * 60 * 1000; // 24 heures
+        if (Date.now() - data.timestamp > maxAge) {
+            localStorage.removeItem(STORAGE_KEY_SIMULATOR);
+            return;
+        }
+
+        // Restaurer les valeurs
+        if (data.depart) {
+            const departInput = document.getElementById('depart');
+            if (departInput) departInput.value = data.depart;
+        }
+        if (data.arrivee) {
+            const arriveeInput = document.getElementById('arrivee');
+            if (arriveeInput) arriveeInput.value = data.arrivee;
+        }
+        // Ne pas restaurer date/heure (utiliser l'actuel)
+
+        log('Données simulateur restaurées');
+    } catch (error) {
+        log('Erreur restauration localStorage:', error);
+    }
+}
+
+function setupAutoSave() {
+    const inputs = ['depart', 'arrivee', 'date', 'heure', 'attente', 'duree-attente'];
+
+    inputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            const eventType = input.type === 'checkbox' ? 'change' : 'input';
+            input.addEventListener(eventType, debounce(saveSimulatorData, 500));
+        }
+    });
+}
+
+// ============================================
+// TRACKING GTM / DATALAYER
+// ============================================
+
+function trackEvent(eventName, eventData = {}) {
+    try {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: eventName,
+            ...eventData
+        });
+        log('Event tracked:', eventName, eventData);
+    } catch (error) {
+        log('Erreur tracking:', error);
+    }
+}
 
 // ============================================
 // CALCUL DU PRIX
 // ============================================
 
 async function calculerPrix() {
-    const depart = document.getElementById('depart').value;
-    const arrivee = document.getElementById('arrivee').value;
+    const depart = document.getElementById('depart').value.trim();
+    const arrivee = document.getElementById('arrivee').value.trim();
     const date = document.getElementById('date').value;
     const heure = document.getElementById('heure').value;
     const attente = document.getElementById('attente').checked;
-    const dureeAttente = document.getElementById('duree-attente').value || 0;
+    const dureeAttente = parseInt(document.getElementById('duree-attente').value) || 0;
 
     const calculateBtn = document.getElementById('calculate-btn');
     const resultDiv = document.getElementById('price-result');
+
+    // Validation des champs
+    if (!validateSimulatorInputs(depart, arrivee, date, heure)) {
+        return;
+    }
 
     // Désactiver le bouton
     calculateBtn.disabled = true;
@@ -128,23 +331,28 @@ async function calculerPrix() {
 
         let distance = 0;
         let duration = 0;
-        let prix = 0;
+        let prixBase = 0;
+        let prixMin = 0;
+        let prixMax = 0;
         let breakdown = [];
         let tarifApplique = '';
+        let isForfait = false;
 
         if (forfait) {
             // Appliquer le forfait
-            prix = forfait.prix;
+            prixBase = forfait.prix;
+            prixMin = forfait.prix; // Forfait = prix fixe
+            prixMax = forfait.prix;
             tarifApplique = forfait.label;
             breakdown.push(`Forfait ${forfait.label}`);
+            isForfait = true;
 
-            // Récupérer quand même la distance pour info (optionnel)
+            // Récupérer quand même la distance pour info
             try {
                 const distanceInfo = await getDistanceFromGoogle(depart, arrivee);
                 distance = distanceInfo.distance;
                 duration = distanceInfo.duration;
             } catch (error) {
-                // Si erreur Google Maps, utiliser des valeurs estimées
                 distance = forfait.distanceEstimee || 0;
                 duration = forfait.dureeEstimee || 0;
             }
@@ -159,8 +367,8 @@ async function calculerPrix() {
             const tarifKm = getTarifKm(date, heure);
             tarifApplique = tarifKm.label;
 
-            // Calcul du prix
-            let prixBase = TARIFS.priseEnCharge + (distance * tarifKm.tarif);
+            // Calcul du prix de base
+            prixBase = TARIFS.priseEnCharge + (distance * tarifKm.tarif);
             breakdown.push(`Prise en charge : ${TARIFS.priseEnCharge.toFixed(2)} €`);
             breakdown.push(`Distance : ${distance.toFixed(1)} km × ${tarifKm.tarif.toFixed(2)} €/km = ${(distance * tarifKm.tarif).toFixed(2)} €`);
 
@@ -174,14 +382,29 @@ async function calculerPrix() {
             // Appliquer le tarif minimum
             if (prixBase < TARIFS.minimum) {
                 breakdown.push(`Tarif minimum appliqué : ${TARIFS.minimum.toFixed(2)} €`);
-                prix = TARIFS.minimum;
-            } else {
-                prix = prixBase;
+                prixBase = TARIFS.minimum;
             }
+
+            // Calcul de la fourchette (conditions de circulation variables)
+            prixMin = Math.max(TARIFS.minimum, prixBase * TARIFS.margeMin);
+            prixMax = prixBase * TARIFS.margeMax;
         }
 
         // Afficher les résultats
-        afficherResultat(prix, distance, duration, breakdown, tarifApplique);
+        afficherResultat(prixBase, prixMin, prixMax, distance, duration, breakdown, tarifApplique, isForfait);
+
+        // Tracking: simulation_complete
+        trackEvent('simulation_complete', {
+            depart: depart.substring(0, 50),
+            arrivee: arrivee.substring(0, 50),
+            distance_km: distance.toFixed(1),
+            prix_estime: prixBase.toFixed(2),
+            tarif_applique: tarifApplique,
+            is_forfait: isForfait
+        });
+
+        // Sauvegarder les données
+        saveSimulatorData();
 
         // Réactiver le bouton
         calculateBtn.disabled = false;
@@ -190,11 +413,120 @@ async function calculerPrix() {
     } catch (error) {
         console.error('Erreur lors du calcul:', error);
 
-        alert('Une erreur est survenue lors du calcul. Veuillez vérifier les adresses saisies ou utiliser la grille tarifaire ci-dessous pour une estimation.');
+        showSimulatorError('Une erreur est survenue lors du calcul. Veuillez vérifier les adresses saisies ou utiliser la grille tarifaire ci-dessous pour une estimation.');
+
+        // Tracking: simulation_error
+        trackEvent('simulation_error', {
+            error_message: error.message || 'Unknown error'
+        });
 
         calculateBtn.disabled = false;
         calculateBtn.innerHTML = originalText;
     }
+}
+
+// ============================================
+// VALIDATION DES INPUTS
+// ============================================
+
+function validateSimulatorInputs(depart, arrivee, date, heure) {
+    const departInput = document.getElementById('depart');
+    const arriveeInput = document.getElementById('arrivee');
+    const dateInput = document.getElementById('date');
+    const heureInput = document.getElementById('heure');
+
+    let isValid = true;
+
+    // Validation adresse de départ
+    if (!depart || depart.length < 3) {
+        showInputError(departInput, 'Veuillez entrer une adresse de départ valide');
+        isValid = false;
+    } else {
+        removeInputError(departInput);
+    }
+
+    // Validation adresse d'arrivée
+    if (!arrivee || arrivee.length < 3) {
+        showInputError(arriveeInput, 'Veuillez entrer une adresse d\'arrivée valide');
+        isValid = false;
+    } else {
+        removeInputError(arriveeInput);
+    }
+
+    // Validation date
+    if (!date) {
+        showInputError(dateInput, 'Veuillez sélectionner une date');
+        isValid = false;
+    } else {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            showInputError(dateInput, 'La date ne peut pas être dans le passé');
+            isValid = false;
+        } else {
+            removeInputError(dateInput);
+        }
+    }
+
+    // Validation heure
+    if (!heure) {
+        showInputError(heureInput, 'Veuillez sélectionner une heure');
+        isValid = false;
+    } else {
+        removeInputError(heureInput);
+    }
+
+    return isValid;
+}
+
+function showInputError(input, message) {
+    if (!input) return;
+
+    input.classList.add('error');
+    input.style.borderColor = '#dc3545';
+
+    // Créer ou mettre à jour le message d'erreur
+    let errorDiv = input.parentElement.querySelector('.input-error-message');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'input-error-message';
+        errorDiv.style.cssText = 'color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;';
+        input.parentElement.appendChild(errorDiv);
+    }
+    errorDiv.textContent = message;
+}
+
+function removeInputError(input) {
+    if (!input) return;
+
+    input.classList.remove('error');
+    input.style.borderColor = '';
+
+    const errorDiv = input.parentElement.querySelector('.input-error-message');
+    if (errorDiv) {
+        errorDiv.remove();
+    }
+}
+
+function showSimulatorError(message) {
+    const form = document.getElementById('simulator-form');
+    if (!form) return;
+
+    // Supprimer l'ancienne erreur si elle existe
+    const existingError = form.querySelector('.simulator-error');
+    if (existingError) existingError.remove();
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'simulator-error alert alert-danger';
+    errorDiv.style.cssText = 'margin-bottom: 1rem; padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px;';
+    errorDiv.textContent = message;
+
+    form.insertBefore(errorDiv, form.firstChild);
+
+    // Supprimer après 10 secondes
+    setTimeout(() => errorDiv.remove(), 10000);
 }
 
 // ============================================
@@ -204,7 +536,7 @@ async function calculerPrix() {
 async function getDistanceFromGoogle(origine, destination) {
     // Vérifier si l'API est configurée
     if (GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') {
-        console.warn('⚠️ Google Maps API non configurée. Utilisation du mode estimation.');
+        log('Google Maps API non configurée. Utilisation du mode estimation.');
         return estimerDistance(origine, destination);
     }
 
@@ -234,14 +566,19 @@ async function getDistanceFromGoogle(origine, destination) {
  * Estimation de distance sans API (mode dégradé)
  */
 function estimerDistance(origine, destination) {
-    // Distances approximatives pour les destinations courantes
+    // Distances approximatives pour les destinations courantes depuis Martigues
     const distances = {
         'aeroport': { distance: 45, duration: 35 },
+        'marseille provence': { distance: 45, duration: 35 },
         'marseille': { distance: 45, duration: 35 },
         'aix': { distance: 35, duration: 30 },
         'salon': { distance: 25, duration: 25 },
         'istres': { distance: 15, duration: 15 },
-        'fos': { distance: 12, duration: 12 }
+        'fos': { distance: 12, duration: 12 },
+        'port de bouc': { distance: 8, duration: 10 },
+        'saint charles': { distance: 50, duration: 40 },
+        'st charles': { distance: 50, duration: 40 },
+        'gare': { distance: 50, duration: 40 }
     };
 
     const dest = destination.toLowerCase();
@@ -381,7 +718,7 @@ function isWeekendOuFerie(dateStr) {
 // AFFICHAGE DES RÉSULTATS
 // ============================================
 
-function afficherResultat(prix, distance, duration, breakdown, tarifApplique) {
+function afficherResultat(prix, prixMin, prixMax, distance, duration, breakdown, tarifApplique, isForfait) {
     const resultDiv = document.getElementById('price-result');
     const priceAmount = document.getElementById('price-amount');
     const distanceValue = document.getElementById('distance-value');
@@ -389,8 +726,15 @@ function afficherResultat(prix, distance, duration, breakdown, tarifApplique) {
     const tarifInfo = document.getElementById('tarif-applique');
     const breakdownContent = document.getElementById('breakdown-content');
 
-    // Prix
-    priceAmount.textContent = window.TaxiJulien.formatPrice(prix);
+    // Prix avec fourchette
+    if (isForfait) {
+        priceAmount.innerHTML = window.TaxiJulien.formatPrice(prix);
+    } else {
+        priceAmount.innerHTML = `
+            <span style="font-size: 0.7em; display: block; margin-bottom: 0.25rem;">Estimation</span>
+            ${window.TaxiJulien.formatPrice(prixMin)} - ${window.TaxiJulien.formatPrice(prixMax)}
+        `;
+    }
 
     // Distance et durée
     distanceValue.textContent = `${distance.toFixed(1)} km`;
@@ -405,11 +749,36 @@ function afficherResultat(prix, distance, duration, breakdown, tarifApplique) {
     ).join('');
 
     // Total
-    breakdownContent.innerHTML += `<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 1.05rem; color: white;">
-        <strong>TOTAL : ${window.TaxiJulien.formatPrice(prix)}</strong>
-    </div>`;
+    if (isForfait) {
+        breakdownContent.innerHTML += `<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 1.05rem; color: white;">
+            <strong>FORFAIT : ${window.TaxiJulien.formatPrice(prix)}</strong>
+        </div>`;
+    } else {
+        breakdownContent.innerHTML += `<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 1.05rem; color: white;">
+            <strong>ESTIMATION : ${window.TaxiJulien.formatPrice(prixMin)} - ${window.TaxiJulien.formatPrice(prixMax)}</strong>
+            <div style="font-weight: 400; font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">
+                * La fourchette tient compte des conditions de circulation variables
+            </div>
+        </div>`;
+    }
 
     // Afficher le résultat
     resultDiv.classList.add('show');
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ============================================
+// UTILITAIRES
+// ============================================
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
