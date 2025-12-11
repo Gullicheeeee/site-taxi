@@ -58,6 +58,9 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
 
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
     <!-- Schema.org Structured Data - LocalBusiness -->
     <script type="application/ld+json">
     {
@@ -458,6 +461,80 @@
         </div>
     </section>
 
+    <!-- CARROUSEL DESTINATIONS - Swiper Fullscreen -->
+    <section class="swiper-showcase-section">
+        <div class="section-title">
+            <h2>Nos Destinations</h2>
+            <p>Découvrez les lieux que nous desservons au quotidien</p>
+        </div>
+
+        <div class="swiper swiper-showcase">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1564594736624-def7a10ab047?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Aéroport Marseille Provence</h3>
+                            <p>Transferts quotidiens vers l'aéroport international</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1561626423-a51b45aef0a1?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Gare TGV Aix-en-Provence</h3>
+                            <p>Connexion directe avec le réseau TGV</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Martigues - La Venise Provençale</h3>
+                            <p>Notre ville d'origine, au cœur de la Côte Bleue</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Marseille Vieux-Port</h3>
+                            <p>La capitale phocéenne et tous ses quartiers</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Aix-en-Provence</h3>
+                            <p>Ville d'art, de culture et d'histoire</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1200&q=80');">
+                        <div class="slide-overlay"></div>
+                        <div class="slide-content">
+                            <h3>Hôpitaux & Cliniques</h3>
+                            <p>Transport médical conventionné CPAM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <!-- Navigation arrows (outside swiper for proper positioning) -->
+        <div class="swiper-nav-prev"><span></span></div>
+        <div class="swiper-nav-next"><span></span></div>
+    </section>
+
     <!-- ZONE D'INTERVENTION -->
     <section class="section">
         <div class="container">
@@ -566,6 +643,10 @@
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
         // Script simulateur rapide (version simplifiée pour la page d'accueil)
         document.getElementById('quick-simulator')?.addEventListener('submit', function(e) {
@@ -577,6 +658,82 @@
                 result.classList.add('show');
                 result.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 500);
+        });
+
+        // Swiper Showcase - Carrousel plein écran style Webflow
+        const swiperShowcase = new Swiper('.swiper-showcase', {
+            // Configuration de base
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            spaceBetween: 30,
+            loop: true,
+            speed: 600,
+            grabCursor: true,
+
+            // Effet de transition
+            effect: 'coverflow',
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2,
+                slideShadows: false,
+            },
+
+            // Navigation clavier
+            keyboard: {
+                enabled: true,
+                onlyInViewport: true,
+            },
+
+            // Molette de souris
+            mousewheel: {
+                forceToAxis: true,
+                sensitivity: 1,
+                releaseOnEdges: true,
+            },
+
+            // Pagination
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                dynamicBullets: true,
+            },
+
+            // Autoplay optionnel
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+
+            // Breakpoints responsive
+            breakpoints: {
+                320: {
+                    slidesPerView: 1.2,
+                    spaceBetween: 15,
+                },
+                640: {
+                    slidesPerView: 1.5,
+                    spaceBetween: 20,
+                },
+                1024: {
+                    slidesPerView: 2.2,
+                    spaceBetween: 30,
+                },
+                1400: {
+                    slidesPerView: 2.5,
+                    spaceBetween: 40,
+                },
+            },
+        });
+
+        // Custom navigation arrows
+        document.querySelector('.swiper-nav-prev')?.addEventListener('click', () => {
+            swiperShowcase.slidePrev();
+        });
+        document.querySelector('.swiper-nav-next')?.addEventListener('click', () => {
+            swiperShowcase.slideNext();
         });
     </script>
 </body>
