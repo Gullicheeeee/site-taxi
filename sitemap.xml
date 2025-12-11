@@ -8,7 +8,7 @@
     <!-- Page d'accueil -->
     <url>
         <loc>https://www.taxijulien.fr/</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -16,7 +16,7 @@
     <!-- Services -->
     <url>
         <loc>https://www.taxijulien.fr/services.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -24,7 +24,7 @@
     <!-- Transport Conventionne CPAM -->
     <url>
         <loc>https://www.taxijulien.fr/conventionne.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -32,7 +32,7 @@
     <!-- Aeroports et Gares -->
     <url>
         <loc>https://www.taxijulien.fr/aeroports-gares.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -40,7 +40,7 @@
     <!-- Longues Distances -->
     <url>
         <loc>https://www.taxijulien.fr/longues-distances.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -48,7 +48,7 @@
     <!-- Courses Classiques -->
     <url>
         <loc>https://www.taxijulien.fr/courses-classiques.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -56,7 +56,7 @@
     <!-- Mise a Disposition -->
     <url>
         <loc>https://www.taxijulien.fr/mise-a-disposition.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -64,7 +64,7 @@
     <!-- Simulateur de prix -->
     <url>
         <loc>https://www.taxijulien.fr/simulateur.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -72,7 +72,7 @@
     <!-- Reservation -->
     <url>
         <loc>https://www.taxijulien.fr/reservation.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -80,7 +80,7 @@
     <!-- Blog -->
     <url>
         <loc>https://www.taxijulien.fr/blog.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -88,14 +88,14 @@
     <!-- Articles Blog -->
     <url>
         <loc>https://www.taxijulien.fr/article-aeroport.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
     <url>
         <loc>https://www.taxijulien.fr/article-cpam.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
@@ -103,7 +103,7 @@
     <!-- A Propos -->
     <url>
         <loc>https://www.taxijulien.fr/a-propos.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
@@ -111,7 +111,7 @@
     <!-- Contact -->
     <url>
         <loc>https://www.taxijulien.fr/contact.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
@@ -119,7 +119,7 @@
     <!-- Mentions Legales -->
     <url>
         <loc>https://www.taxijulien.fr/mentions-legales.html</loc>
-        <lastmod>2024-12-11</lastmod>
+        <lastmod>2025-12-11</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>

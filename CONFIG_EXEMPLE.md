@@ -60,7 +60,7 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXX';
 - index.html
 - reservation.html
 - simulateur.html
-- conventionné.html
+- conventionne.html
 - services.html
 - a-propos.html
 - contact.html
