@@ -1,12 +1,13 @@
 /**
  * TAXI JULIEN - Gestion des Réservations
- * Formulaire de réservation avec envoi via EmailJS
+ * Formulaire de réservation avec envoi via EmailJS et feedback temps réel
  *
  * FONCTIONNALITÉS:
  * - Sauvegarde automatique localStorage (évite perte de données)
  * - Tracking GTM pour analyse des conversions
- * - Validation robuste avec feedback visuel
- * - Gestion des étapes du formulaire
+ * - Validation robuste avec feedback visuel temps réel
+ * - Barre de progression du formulaire
+ * - Notifications toast élégantes
  */
 
 // ============================================
@@ -48,6 +49,214 @@ const FORM_FIELDS = [
 ];
 
 // ============================================
+// VALIDATION EN TEMPS RÉEL
+// ============================================
+
+const RealtimeValidation = {
+    // Configuration des validations par champ
+    validators: {
+        nom: {
+            validate: (value) => value.trim().length >= 2,
+            message: 'Le nom doit contenir au moins 2 caractères'
+        },
+        prenom: {
+            validate: (value) => value.trim().length >= 2,
+            message: 'Le prénom doit contenir au moins 2 caractères'
+        },
+        telephone: {
+            validate: (value) => {
+                const cleaned = value.replace(/[\s\.\-]/g, '');
+                return /^(\+33|0)[1-9]\d{8}$/.test(cleaned);
+            },
+            message: 'Numéro de téléphone invalide'
+        },
+        email: {
+            validate: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+            message: 'Adresse email invalide'
+        },
+        'type-service': {
+            validate: (value) => value !== '',
+            message: 'Veuillez sélectionner un type de service'
+        },
+        'adresse-depart': {
+            validate: (value) => value.trim().length >= 5,
+            message: 'Adresse trop courte (min. 5 caractères)'
+        },
+        'adresse-arrivee': {
+            validate: (value) => value.trim().length >= 5,
+            message: 'Adresse trop courte (min. 5 caractères)'
+        },
+        'date-course': {
+            validate: (value) => {
+                const date = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                return date >= today;
+            },
+            message: 'La date ne peut pas être dans le passé'
+        },
+        'heure-course': {
+            validate: (value) => value !== '',
+            message: 'Veuillez sélectionner une heure'
+        }
+    },
+
+    // Initialiser la validation temps réel
+    init(form) {
+        if (!form) return;
+
+        const inputs = form.querySelectorAll('.form-control');
+
+        inputs.forEach(input => {
+            const fieldName = input.id;
+            const validator = this.validators[fieldName];
+
+            if (!validator) return;
+
+            // Validation au blur (quand on quitte le champ)
+            input.addEventListener('blur', () => {
+                this.validateField(input, validator);
+            });
+
+            // Validation pendant la saisie (debounced)
+            let timeout;
+            input.addEventListener('input', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    if (input.value.trim()) {
+                        this.validateField(input, validator);
+                    } else {
+                        this.clearValidation(input);
+                    }
+                }, 300);
+            });
+        });
+    },
+
+    validateField(input, validator) {
+        const isValid = validator.validate(input.value);
+
+        input.classList.remove('error', 'valid', 'shake');
+
+        // Remove existing error message
+        const existingError = input.parentNode.querySelector('.form-error');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        if (isValid) {
+            input.classList.add('valid');
+        } else if (input.value.trim()) {
+            input.classList.add('error', 'shake');
+
+            // Add error message
+            const errorEl = document.createElement('div');
+            errorEl.className = 'form-error';
+            errorEl.textContent = validator.message;
+            errorEl.style.display = 'block';
+            input.parentNode.appendChild(errorEl);
+        }
+
+        return isValid;
+    },
+
+    clearValidation(input) {
+        input.classList.remove('error', 'valid', 'shake');
+        const existingError = input.parentNode.querySelector('.form-error');
+        if (existingError) {
+            existingError.remove();
+        }
+    },
+
+    // Valider tout le formulaire
+    validateAll(form) {
+        let isValid = true;
+        const inputs = form.querySelectorAll('.form-control[required]');
+
+        inputs.forEach(input => {
+            const validator = this.validators[input.id];
+            if (validator) {
+                const fieldValid = this.validateField(input, validator);
+                if (!fieldValid) isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+};
+
+// ============================================
+// BARRE DE PROGRESSION DU FORMULAIRE
+// ============================================
+
+const FormProgress = {
+    sections: ['personal', 'trip', 'additional'],
+
+    init(form) {
+        if (!form) return;
+
+        // Créer la barre de progression
+        const progressBar = document.createElement('div');
+        progressBar.className = 'form-progress';
+        progressBar.setAttribute('role', 'progressbar');
+        progressBar.setAttribute('aria-label', 'Progression du formulaire');
+
+        this.sections.forEach((section, index) => {
+            const step = document.createElement('div');
+            step.className = 'form-progress__step';
+            step.dataset.section = section;
+            progressBar.appendChild(step);
+        });
+
+        // Insérer avant le premier h3
+        const firstH3 = form.querySelector('h3');
+        if (firstH3) {
+            form.insertBefore(progressBar, firstH3);
+        }
+
+        this.progressBar = progressBar;
+        this.updateProgress(form);
+
+        // Mettre à jour au changement
+        form.addEventListener('input', () => this.updateProgress(form));
+        form.addEventListener('change', () => this.updateProgress(form));
+    },
+
+    updateProgress(form) {
+        if (!this.progressBar) return;
+
+        // Section 1: Infos personnelles (nom, prenom, telephone, email)
+        const personalFields = ['nom', 'prenom', 'telephone', 'email'];
+        const personalFilled = personalFields.every(id => {
+            const el = form.querySelector(`#${id}`);
+            return el && el.value.trim();
+        });
+
+        // Section 2: Trajet (type-service, adresse-depart, adresse-arrivee, date-course, heure-course)
+        const tripFields = ['type-service', 'adresse-depart', 'adresse-arrivee', 'date-course', 'heure-course'];
+        const tripFilled = tripFields.every(id => {
+            const el = form.querySelector(`#${id}`);
+            return el && el.value.trim();
+        });
+
+        // Section 3: RGPD
+        const rgpdChecked = form.querySelector('#rgpd-consent')?.checked;
+
+        const steps = this.progressBar.querySelectorAll('.form-progress__step');
+
+        if (steps[0]) {
+            steps[0].classList.toggle('form-progress__step--active', personalFilled);
+        }
+        if (steps[1]) {
+            steps[1].classList.toggle('form-progress__step--active', personalFilled && tripFilled);
+        }
+        if (steps[2]) {
+            steps[2].classList.toggle('form-progress__step--active', personalFilled && tripFilled && rgpdChecked);
+        }
+    }
+};
+
+// ============================================
 // GESTION DU FORMULAIRE
 // ============================================
 
@@ -62,6 +271,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateCourse = document.getElementById('date-course');
     const heureCourse = document.getElementById('heure-course');
     const telephoneInput = document.getElementById('telephone');
+
+    // Initialiser la validation temps réel
+    RealtimeValidation.init(form);
+
+    // Initialiser la barre de progression
+    FormProgress.init(form);
 
     // Définir la date minimale à aujourd'hui
     if (dateCourse) {
@@ -79,13 +294,24 @@ document.addEventListener('DOMContentLoaded', function() {
         heureCourse.value = `${hours}:00`;
     }
 
-    // Afficher l'info si service conventionné
+    // Afficher l'info si service conventionné avec animation
     if (typeServiceSelect && infoConventionne) {
         typeServiceSelect.addEventListener('change', function() {
             if (this.value === 'conventionne') {
                 infoConventionne.style.display = 'block';
+                infoConventionne.style.opacity = '0';
+                infoConventionne.style.transform = 'translateY(-10px)';
+                requestAnimationFrame(() => {
+                    infoConventionne.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    infoConventionne.style.opacity = '1';
+                    infoConventionne.style.transform = 'translateY(0)';
+                });
             } else {
-                infoConventionne.style.display = 'none';
+                infoConventionne.style.opacity = '0';
+                infoConventionne.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    infoConventionne.style.display = 'none';
+                }, 300);
             }
         });
     }
@@ -356,192 +582,47 @@ function initAddressAutocomplete() {
 }
 
 // ============================================
-// VALIDATION DU FORMULAIRE
+// SOUMISSION DU FORMULAIRE
 // ============================================
 
-function validateReservationForm(form) {
-    let isValid = true;
-    const errors = [];
-
-    // Validation nom
-    const nom = document.getElementById('nom');
-    if (!nom.value.trim() || nom.value.trim().length < 2) {
-        showFieldError(nom, 'Veuillez entrer votre nom');
-        errors.push('nom');
-        isValid = false;
-    } else {
-        removeFieldError(nom);
-    }
-
-    // Validation prénom
-    const prenom = document.getElementById('prenom');
-    if (!prenom.value.trim() || prenom.value.trim().length < 2) {
-        showFieldError(prenom, 'Veuillez entrer votre prénom');
-        errors.push('prenom');
-        isValid = false;
-    } else {
-        removeFieldError(prenom);
-    }
-
-    // Validation téléphone
-    const telephone = document.getElementById('telephone');
-    if (!validatePhone(telephone.value)) {
-        showFieldError(telephone, 'Numéro de téléphone invalide');
-        errors.push('telephone');
-        isValid = false;
-    } else {
-        removeFieldError(telephone);
-    }
-
-    // Validation email
-    const email = document.getElementById('email');
-    if (!validateEmail(email.value)) {
-        showFieldError(email, 'Adresse email invalide');
-        errors.push('email');
-        isValid = false;
-    } else {
-        removeFieldError(email);
-    }
-
-    // Validation type de service
-    const typeService = document.getElementById('type-service');
-    if (!typeService.value) {
-        showFieldError(typeService, 'Veuillez sélectionner un type de service');
-        errors.push('type-service');
-        isValid = false;
-    } else {
-        removeFieldError(typeService);
-    }
-
-    // Validation adresse départ
-    const adresseDepart = document.getElementById('adresse-depart');
-    if (!adresseDepart.value.trim() || adresseDepart.value.trim().length < 5) {
-        showFieldError(adresseDepart, 'Veuillez entrer une adresse de départ complète');
-        errors.push('adresse-depart');
-        isValid = false;
-    } else {
-        removeFieldError(adresseDepart);
-    }
-
-    // Validation adresse arrivée
-    const adresseArrivee = document.getElementById('adresse-arrivee');
-    if (!adresseArrivee.value.trim() || adresseArrivee.value.trim().length < 5) {
-        showFieldError(adresseArrivee, 'Veuillez entrer une adresse d\'arrivée complète');
-        errors.push('adresse-arrivee');
-        isValid = false;
-    } else {
-        removeFieldError(adresseArrivee);
-    }
-
-    // Validation date
-    const dateCourse = document.getElementById('date-course');
-    if (!dateCourse.value) {
-        showFieldError(dateCourse, 'Veuillez sélectionner une date');
-        errors.push('date-course');
-        isValid = false;
-    } else {
-        const selectedDate = new Date(dateCourse.value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (selectedDate < today) {
-            showFieldError(dateCourse, 'La date ne peut pas être dans le passé');
-            errors.push('date-course');
-            isValid = false;
-        } else {
-            removeFieldError(dateCourse);
+async function handleFormSubmit(form, submitBtn, confirmationMessage) {
+    // Validation complète du formulaire avec feedback temps réel
+    if (!RealtimeValidation.validateAll(form)) {
+        // Scroll vers la première erreur
+        const firstError = form.querySelector('.form-control.error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
         }
-    }
 
-    // Validation heure
-    const heureCourse = document.getElementById('heure-course');
-    if (!heureCourse.value) {
-        showFieldError(heureCourse, 'Veuillez sélectionner une heure');
-        errors.push('heure-course');
-        isValid = false;
-    } else {
-        removeFieldError(heureCourse);
+        // Tracking des erreurs
+        const errorFields = Array.from(form.querySelectorAll('.form-control.error'))
+            .map(el => el.id)
+            .join(',');
+        trackEvent('form_validation_error', {
+            form_name: 'reservation',
+            error_fields: errorFields
+        });
+        return;
     }
 
     // Vérifier le consentement RGPD
     const rgpdConsent = document.getElementById('rgpd-consent');
     if (!rgpdConsent.checked) {
-        showFieldError(rgpdConsent.parentElement, 'Veuillez accepter la politique de confidentialité');
-        errors.push('rgpd-consent');
-        isValid = false;
-    } else {
-        removeFieldError(rgpdConsent.parentElement);
-    }
-
-    // Tracking des erreurs de validation
-    if (!isValid) {
-        trackEvent('form_validation_error', {
-            form_name: 'reservation',
-            error_fields: errors.join(',')
-        });
-    }
-
-    return isValid;
-}
-
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-function validatePhone(phone) {
-    const cleaned = phone.replace(/[\s\.\-]/g, '');
-    const re = /^(\+33|0)[1-9]\d{8}$/;
-    return re.test(cleaned);
-}
-
-function showFieldError(input, message) {
-    if (!input) return;
-
-    input.classList.add('error');
-    if (input.style) input.style.borderColor = '#dc3545';
-
-    let errorDiv = input.parentElement.querySelector('.field-error-message');
-    if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'field-error-message';
-        errorDiv.style.cssText = 'color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem;';
-        input.parentElement.appendChild(errorDiv);
-    }
-    errorDiv.textContent = message;
-}
-
-function removeFieldError(input) {
-    if (!input) return;
-
-    input.classList.remove('error');
-    if (input.style) input.style.borderColor = '';
-
-    const errorDiv = input.parentElement.querySelector('.field-error-message');
-    if (errorDiv) {
-        errorDiv.remove();
-    }
-}
-
-// ============================================
-// SOUMISSION DU FORMULAIRE
-// ============================================
-
-async function handleFormSubmit(form, submitBtn, confirmationMessage) {
-    // Validation du formulaire
-    if (!validateReservationForm(form)) {
-        // Scroll vers la première erreur
-        const firstError = form.querySelector('.error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const rgpdLabel = rgpdConsent.closest('label');
+        if (rgpdLabel) {
+            rgpdLabel.classList.add('shake');
+            setTimeout(() => rgpdLabel.classList.remove('shake'), 500);
         }
+        rgpdConsent.focus();
         return;
     }
 
-    // Désactiver le bouton et afficher un loader
+    // Désactiver le bouton et afficher un loader avec la classe CSS
     submitBtn.disabled = true;
+    submitBtn.classList.add('btn--loading');
     const originalBtnText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<div class="spinner"></div> Envoi en cours...';
+    submitBtn.innerHTML = 'Envoi en cours...';
 
     try {
         // Préparer les données du formulaire
@@ -570,10 +651,25 @@ async function handleFormSubmit(form, submitBtn, confirmationMessage) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        // Succès
-        form.style.display = 'none';
-        confirmationMessage.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Succès - animation de disparition du formulaire
+        form.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        form.style.opacity = '0';
+        form.style.transform = 'translateY(-20px)';
+
+        setTimeout(() => {
+            form.style.display = 'none';
+            confirmationMessage.style.display = 'block';
+            confirmationMessage.style.opacity = '0';
+            confirmationMessage.style.transform = 'translateY(20px)';
+
+            requestAnimationFrame(() => {
+                confirmationMessage.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                confirmationMessage.style.opacity = '1';
+                confirmationMessage.style.transform = 'translateY(0)';
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
 
         // Supprimer les données sauvegardées après envoi réussi
         localStorage.removeItem(STORAGE_KEY_RESERVATION);
@@ -595,7 +691,8 @@ async function handleFormSubmit(form, submitBtn, confirmationMessage) {
     } catch (error) {
         console.error('Erreur lors de l\'envoi:', error);
 
-        showFormError(form, 'Une erreur est survenue lors de l\'envoi de votre réservation. Veuillez réessayer ou nous contacter directement par téléphone au 01 23 45 67 89.');
+        // Afficher une notification d'erreur élégante
+        showNotification('error', 'Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous appeler au 01 23 45 67 89.');
 
         // Tracking: form_error
         trackEvent('form_error', {
@@ -605,22 +702,72 @@ async function handleFormSubmit(form, submitBtn, confirmationMessage) {
 
         // Réactiver le bouton
         submitBtn.disabled = false;
+        submitBtn.classList.remove('btn--loading');
         submitBtn.innerHTML = originalBtnText;
     }
 }
 
-function showFormError(form, message) {
-    const existingError = form.querySelector('.form-submit-error');
-    if (existingError) existingError.remove();
+// ============================================
+// NOTIFICATION TOAST
+// ============================================
 
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'form-submit-error alert alert-danger';
-    errorDiv.style.cssText = 'margin-bottom: 1rem; padding: 1rem; background: #f8d7da; color: #721c24; border-radius: 8px;';
-    errorDiv.textContent = message;
+function showNotification(type, message) {
+    // Supprimer les notifications existantes
+    const existing = document.querySelector('.notification-toast');
+    if (existing) existing.remove();
 
-    form.insertBefore(errorDiv, form.firstChild);
+    const toast = document.createElement('div');
+    toast.className = `notification-toast notification-toast--${type}`;
+    toast.innerHTML = `
+        <span class="notification-toast__icon">${type === 'error' ? '⚠️' : '✓'}</span>
+        <span class="notification-toast__message">${message}</span>
+        <button class="notification-toast__close" aria-label="Fermer">×</button>
+    `;
 
-    setTimeout(() => errorDiv.remove(), 15000);
+    // Styles inline pour la notification (pourrait être en CSS)
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+        background: ${type === 'error' ? '#fee2e2' : '#d1fae5'};
+        color: ${type === 'error' ? '#991b1b' : '#065f46'};
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 10000;
+        animation: slideUp 0.3s ease;
+    `;
+
+    // Ajouter l'animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    document.body.appendChild(toast);
+
+    // Fermeture
+    const closeBtn = toast.querySelector('.notification-toast__close');
+    closeBtn.style.cssText = 'background: none; border: none; font-size: 1.5rem; cursor: pointer; margin-left: auto;';
+    closeBtn.addEventListener('click', () => toast.remove());
+
+    // Auto-close après 5s
+    setTimeout(() => {
+        toast.style.transition = 'opacity 0.3s, transform 0.3s';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(100px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
 }
 
 // ============================================

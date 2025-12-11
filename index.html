@@ -197,37 +197,39 @@
     </script>
 </head>
 <body>
+    <!-- Skip link pour accessibilité clavier -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
     <!-- HEADER & NAVIGATION -->
-    <header class="header">
+    <header class="header" role="banner">
         <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">
-                    <span class="logo-icon">🚖</span>
+            <nav class="navbar" role="navigation" aria-label="Navigation principale">
+                <a href="index.html" class="logo" aria-label="Taxi Julien - Accueil">
+                    <span class="logo-icon" aria-hidden="true">🚖</span>
                     <span>Taxi Julien</span>
                 </a>
 
-                <button class="mobile-menu-toggle" aria-label="Menu">
-                    ☰
+                <button class="mobile-menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-menu">
+                    <span aria-hidden="true">☰</span>
                 </button>
 
-                <ul class="nav-menu">
-                    <li><a href="index.html" class="nav-link active">Accueil</a></li>
-                    <li class="nav-item">
-                        <a href="services.html" class="nav-link">Services</a>
-                        <div class="nav-dropdown">
-                            <a href="conventionne.html" class="nav-dropdown-item">Transport Conventionné</a>
-                            <a href="aeroports-gares.html" class="nav-dropdown-item">Aéroports & Gares</a>
-                            <a href="longues-distances.html" class="nav-dropdown-item">Longues Distances</a>
-                            <a href="courses-classiques.html" class="nav-dropdown-item">Courses Classiques</a>
-                            <a href="mise-a-disposition.html" class="nav-dropdown-item">Mise à Disposition</a>
+                <ul class="nav-menu" id="nav-menu" role="menubar">
+                    <li role="none"><a href="index.html" class="nav-link active" role="menuitem" aria-current="page">Accueil</a></li>
+                    <li class="nav-item" role="none">
+                        <a href="services.html" class="nav-link" role="menuitem" aria-haspopup="true" aria-expanded="false">Services</a>
+                        <div class="nav-dropdown" role="menu" aria-label="Sous-menu Services">
+                            <a href="conventionne.html" class="nav-dropdown-item" role="menuitem">Transport Conventionné</a>
+                            <a href="aeroports-gares.html" class="nav-dropdown-item" role="menuitem">Aéroports & Gares</a>
+                            <a href="longues-distances.html" class="nav-dropdown-item" role="menuitem">Longues Distances</a>
+                            <a href="courses-classiques.html" class="nav-dropdown-item" role="menuitem">Courses Classiques</a>
+                            <a href="mise-a-disposition.html" class="nav-dropdown-item" role="menuitem">Mise à Disposition</a>
                         </div>
                     </li>
-                    <li><a href="simulateur.html" class="nav-link">Simulateur</a></li>
-                    <li><a href="blog.html" class="nav-link">Blog</a></li>
-                    <li><a href="a-propos.html" class="nav-link">À propos</a></li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                    <li><a href="reservation.html" class="btn btn-primary">Réserver</a></li>
+                    <li role="none"><a href="simulateur.html" class="nav-link" role="menuitem">Simulateur</a></li>
+                    <li role="none"><a href="blog.html" class="nav-link" role="menuitem">Blog</a></li>
+                    <li role="none"><a href="a-propos.html" class="nav-link" role="menuitem">À propos</a></li>
+                    <li role="none"><a href="contact.html" class="nav-link" role="menuitem">Contact</a></li>
+                    <li role="none"><a href="reservation.html" class="btn btn-primary" role="menuitem">Réserver</a></li>
                 </ul>
             </nav>
         </div>
@@ -241,7 +243,8 @@
     </div>
 
     <!-- HERO SECTION -->
-    <section class="hero">
+    <main id="main-content">
+    <section class="hero" role="region" aria-label="Accueil">
         <div class="container hero-content">
             <h1>Taxi Conventionné à Martigues</h1>
             <p class="hero-subtitle">Votre transport médical et vos trajets quotidiens en toute sérénité</p>
@@ -505,9 +508,10 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- FOOTER -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
