@@ -177,7 +177,7 @@ Fichiers concernés :
 - `index.html`
 - `reservation.html`
 - `simulateur.html`
-- `conventionné.html`
+- `conventionne.html`
 - `services.html`
 - `a-propos.html`
 - `contact.html`
@@ -201,7 +201,7 @@ taxi-julien-site/
 ├── index.html                  # Page d'accueil
 ├── reservation.html            # Page de réservation
 ├── simulateur.html             # Simulateur de prix
-├── conventionné.html           # Transport conventionné CPAM
+├── conventionne.html           # Transport conventionné CPAM
 ├── services.html               # Tous les services
 ├── a-propos.html              # À propos
 ├── contact.html               # Contact
