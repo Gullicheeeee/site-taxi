@@ -58,8 +58,6 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <!-- Schema.org Structured Data - LocalBusiness -->
     <script type="application/ld+json">
@@ -461,64 +459,76 @@
         </div>
     </section>
 
-    <!-- CARROUSEL DESTINATIONS - Swiper Fullscreen -->
-    <section class="swiper-showcase-section">
+    <!-- CARROUSEL DESTINATIONS - Swipeflow Vanilla -->
+    <section class="sf-carousel-section">
         <div class="section-title">
             <h2>Nos Destinations</h2>
             <p>Découvrez les lieux que nous desservons au quotidien</p>
         </div>
 
-        <div class="swiper swiper-showcase">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1564594736624-def7a10ab047?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+        <div class="sf-carousel" data-carousel>
+            <div class="sf-carousel-track" data-track>
+                <!-- Slide 1 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1564594736624-def7a10ab047?w=1200&q=80" alt="Aéroport Marseille Provence" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Aéroport Marseille Provence</h3>
                             <p>Transferts quotidiens vers l'aéroport international</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1561626423-a51b45aef0a1?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+                <!-- Slide 2 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1561626423-a51b45aef0a1?w=1200&q=80" alt="Gare TGV Aix-en-Provence" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Gare TGV Aix-en-Provence</h3>
                             <p>Connexion directe avec le réseau TGV</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+                <!-- Slide 3 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80" alt="Martigues - La Venise Provençale" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Martigues - La Venise Provençale</h3>
                             <p>Notre ville d'origine, au cœur de la Côte Bleue</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+                <!-- Slide 4 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1200&q=80" alt="Marseille Vieux-Port" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Marseille Vieux-Port</h3>
                             <p>La capitale phocéenne et tous ses quartiers</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+                <!-- Slide 5 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1200&q=80" alt="Aix-en-Provence" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Aix-en-Provence</h3>
                             <p>Ville d'art, de culture et d'histoire</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
+                <!-- Slide 6 -->
+                <div class="sf-slide" data-slide>
+                    <div class="sf-slide-inner">
+                        <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1200&q=80" alt="Hôpitaux & Cliniques" loading="lazy">
+                        <div class="sf-slide-overlay"></div>
+                        <div class="sf-slide-content">
                             <h3>Hôpitaux & Cliniques</h3>
                             <p>Transport médical conventionné CPAM</p>
                         </div>
@@ -526,13 +536,21 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
-        </div>
+            <!-- Navigation Arrows (Desktop) -->
+            <button class="sf-arrow sf-arrow-prev" data-prev aria-label="Slide précédente">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="sf-arrow sf-arrow-next" data-next aria-label="Slide suivante">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
 
-        <!-- Navigation arrows (outside swiper for proper positioning) -->
-        <div class="swiper-nav-prev"><span></span></div>
-        <div class="swiper-nav-next"><span></span></div>
+            <!-- Dots Navigation -->
+            <div class="sf-dots" data-dots></div>
+        </div>
     </section>
 
     <!-- ZONE D'INTERVENTION -->
@@ -644,9 +662,6 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <script>
         // Script simulateur rapide (version simplifiée pour la page d'accueil)
         document.getElementById('quick-simulator')?.addEventListener('submit', function(e) {
@@ -660,82 +675,223 @@
             }, 500);
         });
 
-        // Swiper Showcase - Carrousel plein écran style Webflow
-        const swiperShowcase = new Swiper('.swiper-showcase', {
-            // Configuration de base
-            slidesPerView: 'auto',
-            centeredSlides: true,
-            spaceBetween: 30,
-            loop: true,
-            speed: 600,
-            grabCursor: true,
+        /**
+         * Swipeflow Carousel - Vanilla JS
+         * Un carrousel moderne, fluide et responsive sans dépendances
+         *
+         * CUSTOMISATION:
+         * - Modifier les variables CSS dans .sf-carousel pour changer les couleurs
+         * - Ajuster --sf-slide-gap pour l'espacement entre slides
+         * - Changer --sf-transition-duration pour la vitesse d'animation
+         */
+        class SwipeflowCarousel {
+            constructor(element) {
+                this.carousel = element;
+                this.track = element.querySelector('[data-track]');
+                this.slides = [...element.querySelectorAll('[data-slide]')];
+                this.prevBtn = element.querySelector('[data-prev]');
+                this.nextBtn = element.querySelector('[data-next]');
+                this.dotsContainer = element.querySelector('[data-dots]');
 
-            // Effet de transition
-            effect: 'coverflow',
-            coverflowEffect: {
-                rotate: 0,
-                stretch: 0,
-                depth: 100,
-                modifier: 2,
-                slideShadows: false,
-            },
+                this.currentIndex = 0;
+                this.slidesCount = this.slides.length;
 
-            // Navigation clavier
-            keyboard: {
-                enabled: true,
-                onlyInViewport: true,
-            },
+                // Drag/Swipe state
+                this.isDragging = false;
+                this.startX = 0;
+                this.currentX = 0;
+                this.dragOffset = 0;
+                this.velocity = 0;
+                this.lastX = 0;
+                this.lastTime = 0;
 
-            // Molette de souris
-            mousewheel: {
-                forceToAxis: true,
-                sensitivity: 1,
-                releaseOnEdges: true,
-            },
+                // Configuration
+                this.threshold = 50; // Minimum drag distance to trigger slide change
+                this.momentumMultiplier = 0.3;
 
-            // Pagination
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                dynamicBullets: true,
-            },
+                this.init();
+            }
 
-            // Autoplay optionnel
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-            },
+            init() {
+                this.createDots();
+                this.bindEvents();
+                this.updateSlideWidths();
+                this.goToSlide(0, false);
 
-            // Breakpoints responsive
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
-                    spaceBetween: 16,
-                    effect: 'slide',
-                },
-                769: {
-                    slidesPerView: 1.8,
-                    spaceBetween: 24,
-                    effect: 'coverflow',
-                },
-                1024: {
-                    slidesPerView: 2.2,
-                    spaceBetween: 30,
-                },
-                1400: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 40,
-                },
-            },
-        });
+                // Recalculate on resize
+                window.addEventListener('resize', () => {
+                    this.updateSlideWidths();
+                    this.goToSlide(this.currentIndex, false);
+                });
+            }
 
-        // Custom navigation arrows
-        document.querySelector('.swiper-nav-prev')?.addEventListener('click', () => {
-            swiperShowcase.slidePrev();
-        });
-        document.querySelector('.swiper-nav-next')?.addEventListener('click', () => {
-            swiperShowcase.slideNext();
+            updateSlideWidths() {
+                this.slideWidth = this.slides[0].offsetWidth;
+                this.gap = parseInt(getComputedStyle(this.track).gap) || 0;
+            }
+
+            createDots() {
+                if (!this.dotsContainer) return;
+
+                this.dotsContainer.innerHTML = '';
+                this.slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'sf-dot' + (index === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', `Aller à la slide ${index + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(index));
+                    this.dotsContainer.appendChild(dot);
+                });
+                this.dots = [...this.dotsContainer.querySelectorAll('.sf-dot')];
+            }
+
+            bindEvents() {
+                // Arrow navigation
+                this.prevBtn?.addEventListener('click', () => this.prev());
+                this.nextBtn?.addEventListener('click', () => this.next());
+
+                // Keyboard navigation
+                this.carousel.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                });
+
+                // Touch events
+                this.track.addEventListener('touchstart', (e) => this.onDragStart(e), { passive: true });
+                this.track.addEventListener('touchmove', (e) => this.onDragMove(e), { passive: false });
+                this.track.addEventListener('touchend', (e) => this.onDragEnd(e));
+
+                // Mouse events (for desktop drag)
+                this.track.addEventListener('mousedown', (e) => this.onDragStart(e));
+                document.addEventListener('mousemove', (e) => this.onDragMove(e));
+                document.addEventListener('mouseup', (e) => this.onDragEnd(e));
+
+                // Prevent context menu on long press
+                this.track.addEventListener('contextmenu', (e) => {
+                    if (this.isDragging) e.preventDefault();
+                });
+            }
+
+            onDragStart(e) {
+                this.isDragging = true;
+                this.startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                this.lastX = this.startX;
+                this.lastTime = Date.now();
+                this.velocity = 0;
+
+                this.track.style.transition = 'none';
+                this.carousel.classList.add('is-dragging');
+            }
+
+            onDragMove(e) {
+                if (!this.isDragging) return;
+
+                const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                const now = Date.now();
+                const dt = now - this.lastTime;
+
+                // Calculate velocity for momentum
+                if (dt > 0) {
+                    this.velocity = (currentX - this.lastX) / dt;
+                }
+
+                this.lastX = currentX;
+                this.lastTime = now;
+
+                this.dragOffset = currentX - this.startX;
+
+                // Apply drag with resistance at edges
+                let resistance = 1;
+                const currentOffset = this.getCurrentOffset();
+                const maxOffset = 0;
+                const minOffset = -((this.slidesCount - 1) * (this.slideWidth + this.gap));
+
+                if (currentOffset + this.dragOffset > maxOffset ||
+                    currentOffset + this.dragOffset < minOffset) {
+                    resistance = 0.3;
+                }
+
+                const newOffset = currentOffset + (this.dragOffset * resistance);
+                this.track.style.transform = `translateX(${newOffset}px)`;
+
+                // Prevent scroll while dragging horizontally
+                if (Math.abs(this.dragOffset) > 10) {
+                    e.preventDefault?.();
+                }
+            }
+
+            onDragEnd() {
+                if (!this.isDragging) return;
+                this.isDragging = false;
+
+                this.carousel.classList.remove('is-dragging');
+                this.track.style.transition = '';
+
+                // Calculate momentum
+                const momentum = this.velocity * this.momentumMultiplier * 1000;
+                const totalDrag = this.dragOffset + momentum;
+
+                // Determine slide change
+                if (Math.abs(totalDrag) > this.threshold) {
+                    if (totalDrag > 0) {
+                        this.prev();
+                    } else {
+                        this.next();
+                    }
+                } else {
+                    this.goToSlide(this.currentIndex);
+                }
+
+                this.dragOffset = 0;
+            }
+
+            getCurrentOffset() {
+                const transform = getComputedStyle(this.track).transform;
+                if (transform === 'none') return 0;
+                const matrix = new DOMMatrixReadOnly(transform);
+                return matrix.m41;
+            }
+
+            prev() {
+                const newIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.slidesCount - 1;
+                this.goToSlide(newIndex);
+            }
+
+            next() {
+                const newIndex = this.currentIndex < this.slidesCount - 1 ? this.currentIndex + 1 : 0;
+                this.goToSlide(newIndex);
+            }
+
+            goToSlide(index, animate = true) {
+                this.currentIndex = index;
+                const offset = -(index * (this.slideWidth + this.gap));
+
+                if (!animate) {
+                    this.track.style.transition = 'none';
+                }
+
+                this.track.style.transform = `translateX(${offset}px)`;
+
+                if (!animate) {
+                    // Force reflow
+                    this.track.offsetHeight;
+                    this.track.style.transition = '';
+                }
+
+                // Update dots
+                this.dots?.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+
+                // Update slides active state
+                this.slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+            }
+        }
+
+        // Initialize all carousels on the page
+        document.querySelectorAll('[data-carousel]').forEach(carousel => {
+            new SwipeflowCarousel(carousel);
         });
     </script>
 </body>
