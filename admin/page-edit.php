@@ -1,4 +1,10 @@
 <?php
+/**
+ * ÉDITEUR DE PAGE - Back-Office Taxi Julien
+ * Éditeur de blocs WYSIWYG avec panel SEO latéral style Yoast
+ */
+declare(strict_types=1);
+
 require_once 'config.php';
 requireLogin();
 
@@ -423,6 +429,257 @@ function getContent($section) {
     padding: 2rem;
     color: var(--gray-400);
 }
+
+/* ==================== PANEL SEO LATÉRAL ==================== */
+.page-editor-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .page-editor-layout {
+        grid-template-columns: 1fr;
+    }
+    .seo-panel {
+        position: static !important;
+        width: 100% !important;
+    }
+}
+
+.seo-panel {
+    position: sticky;
+    top: 1rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+}
+
+.seo-panel-header {
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+    color: white;
+}
+
+.seo-panel-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.seo-score-circle {
+    width: 80px;
+    height: 80px;
+    margin: 1rem auto;
+    position: relative;
+}
+
+.seo-score-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.seo-score-circle .bg {
+    fill: none;
+    stroke: var(--gray-200);
+    stroke-width: 8;
+}
+
+.seo-score-circle .progress {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease, stroke 0.5s ease;
+}
+
+.seo-score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.seo-score-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.seo-score-label {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+}
+
+.seo-checks {
+    padding: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.seo-check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.seo-check-item:last-child {
+    margin-bottom: 0;
+}
+
+.seo-check-item.success {
+    background: #dcfce7;
+}
+
+.seo-check-item.warning {
+    background: #fef3c7;
+}
+
+.seo-check-item.error {
+    background: #fee2e2;
+}
+
+.seo-check-item.info {
+    background: #dbeafe;
+}
+
+.seo-check-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+.seo-check-text {
+    flex: 1;
+}
+
+.seo-quick-fix {
+    padding: 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.seo-quick-fix-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.seo-quick-fix input,
+.seo-quick-fix textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.seo-quick-fix input:focus,
+.seo-quick-fix textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.1);
+}
+
+.seo-counter {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.75rem;
+    margin-top: -0.25rem;
+}
+
+.seo-counter.good { color: #16a34a; }
+.seo-counter.warn { color: #f59e0b; }
+.seo-counter.bad { color: #dc2626; }
+
+/* Google Preview */
+.seo-preview {
+    padding: 1rem;
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-50);
+}
+
+.seo-preview-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.seo-preview-box {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+}
+
+.seo-preview-title {
+    color: #1a0dab;
+    font-size: 1.05rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.seo-preview-url {
+    color: #006621;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.seo-preview-desc {
+    color: #545454;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Word count widget */
+.word-count-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    font-size: 0.85rem;
+}
+
+.word-count-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.word-count-progress {
+    height: 100%;
+    transition: width 0.3s ease, background 0.3s ease;
+    border-radius: 3px;
+}
+
+.main-content-area {
+    min-width: 0;
+}
 </style>
 
 <div class="page-header d-flex justify-between align-center">
@@ -436,14 +693,10 @@ function getContent($section) {
     </div>
 </div>
 
-<!-- Tabs -->
-<div class="tabs">
-    <button class="tab active" data-tab="content">Contenu & Blocs</button>
-    <button class="tab" data-tab="seo">SEO</button>
-</div>
-
-<!-- Tab Contenu -->
-<div class="tab-content active" id="tab-content">
+<!-- Layout principal : Éditeur + Panel SEO latéral -->
+<div class="page-editor-layout">
+    <!-- Zone principale de contenu -->
+    <div class="main-content-area">
 
     <!-- Hero Section -->
     <div class="card">
@@ -833,66 +1086,90 @@ function getContent($section) {
 
         <?php endif; ?>
     </div>
-</div>
 
-<!-- Tab SEO -->
-<div class="tab-content" id="tab-seo" style="display: none;">
-    <form method="POST">
-        <input type="hidden" name="action" value="save_page">
-        <input type="hidden" name="title" value="<?= e($page['title']) ?>">
-        <input type="hidden" name="slug" value="<?= e($page['slug']) ?>">
-        <input type="hidden" name="hero_title" value="<?= e($page['hero_title']) ?>">
-        <input type="hidden" name="hero_subtitle" value="<?= e($page['hero_subtitle']) ?>">
-        <input type="hidden" name="hero_image" value="<?= e($page['hero_image']) ?>">
+    </div><!-- Fin main-content-area -->
 
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">🔍 Balises Meta SEO</h3>
+    <!-- Panel SEO latéral -->
+    <div class="seo-panel">
+        <div class="seo-panel-header">
+            <h3>🔍 Analyse SEO</h3>
+        </div>
+
+        <!-- Score SEO circulaire -->
+        <div style="padding: 1rem; text-align: center;">
+            <div class="seo-score-circle">
+                <svg viewBox="0 0 36 36">
+                    <path class="bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="progress" id="seo-progress" stroke="#22c55e" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="seo-score-value">
+                    <div class="seo-score-number" id="seo-score-number">--</div>
+                    <div class="seo-score-label">/100</div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label class="form-label">Meta Title</label>
-                    <input type="text" name="meta_title" class="form-control"
-                           value="<?= e($page['meta_title']) ?>" maxlength="70">
-                    <p class="form-help">
-                        <span id="meta-title-count"><?= strlen($page['meta_title'] ?? '') ?></span>/60 caractères recommandés
-                    </p>
-                </div>
+            <div id="seo-score-text" style="font-size: 0.9rem; font-weight: 600; color: var(--gray-600);">Analyse en cours...</div>
+        </div>
 
-                <div class="form-group">
-                    <label class="form-label">Meta Description</label>
-                    <textarea name="meta_description" class="form-control" rows="3" maxlength="200"><?= e($page['meta_description']) ?></textarea>
-                    <p class="form-help">
-                        <span id="meta-desc-count"><?= strlen($page['meta_description'] ?? '') ?></span>/160 caractères recommandés
-                    </p>
-                </div>
+        <!-- Checks SEO -->
+        <div class="seo-checks" id="seo-checks">
+            <!-- Les checks seront injectés par JavaScript -->
+        </div>
 
-                <div class="form-group">
-                    <label class="form-label">Meta Keywords</label>
-                    <input type="text" name="meta_keywords" class="form-control"
-                           value="<?= e($page['meta_keywords']) ?>">
-                    <p class="form-help">Mots-clés séparés par des virgules</p>
-                </div>
-
-                <!-- Aperçu Google -->
-                <div style="background: var(--gray-100); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;">
-                    <p style="font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.75rem;">Aperçu Google</p>
-                    <p style="color: #1a0dab; font-size: 1.2rem; margin-bottom: 0.25rem;">
-                        <?= e($page['meta_title'] ?: $page['title']) ?>
-                    </p>
-                    <p style="color: #006621; font-size: 0.9rem; margin-bottom: 0.25rem;">
-                        votresite.fr/<?= e($page['slug']) ?>
-                    </p>
-                    <p style="color: #545454; font-size: 0.9rem;">
-                        <?= e($page['meta_description'] ?: 'Description de la page...') ?>
-                    </p>
-                </div>
+        <!-- Word count -->
+        <div class="word-count-widget">
+            <span id="word-count-value">0 mots</span>
+            <div class="word-count-bar">
+                <div class="word-count-progress" id="word-count-progress"></div>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg">💾 Enregistrer le SEO</button>
-    </form>
-</div>
+        <!-- Quick fix SEO inputs -->
+        <form method="POST" id="seo-quick-form">
+            <input type="hidden" name="action" value="save_page">
+            <input type="hidden" name="title" value="<?= e($page['title']) ?>">
+            <input type="hidden" name="slug" value="<?= e($page['slug']) ?>">
+            <input type="hidden" name="hero_title" value="<?= e($page['hero_title']) ?>">
+            <input type="hidden" name="hero_subtitle" value="<?= e($page['hero_subtitle']) ?>">
+            <input type="hidden" name="hero_image" value="<?= e($page['hero_image']) ?>">
+
+            <div class="seo-quick-fix">
+                <div class="seo-quick-fix-label">Meta Title</div>
+                <input type="text" name="meta_title" id="seo-meta-title"
+                       value="<?= e($page['meta_title']) ?>"
+                       maxlength="70"
+                       placeholder="Titre pour Google (60 car. max)">
+                <div class="seo-counter" id="title-counter">
+                    <span id="title-count"><?= strlen($page['meta_title'] ?? '') ?></span>/60
+                </div>
+
+                <div class="seo-quick-fix-label" style="margin-top: 0.75rem;">Meta Description</div>
+                <textarea name="meta_description" id="seo-meta-desc" rows="3"
+                          maxlength="200"
+                          placeholder="Description pour Google (160 car. max)"><?= e($page['meta_description']) ?></textarea>
+                <div class="seo-counter" id="desc-counter">
+                    <span id="desc-count"><?= strlen($page['meta_description'] ?? '') ?></span>/160
+                </div>
+
+                <input type="hidden" name="meta_keywords" value="<?= e($page['meta_keywords']) ?>">
+            </div>
+
+            <!-- Aperçu Google -->
+            <div class="seo-preview">
+                <div class="seo-preview-label">Aperçu Google</div>
+                <div class="seo-preview-box">
+                    <div class="seo-preview-title" id="preview-title"><?= e($page['meta_title'] ?: $page['title']) ?></div>
+                    <div class="seo-preview-url">votresite.fr/<?= e($page['slug']) ?></div>
+                    <div class="seo-preview-desc" id="preview-desc"><?= e($page['meta_description'] ?: 'Ajoutez une meta description...') ?></div>
+                </div>
+            </div>
+
+            <div style="padding: 1rem;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">💾 Enregistrer SEO</button>
+            </div>
+        </form>
+    </div><!-- Fin seo-panel -->
+
+</div><!-- Fin page-editor-layout -->
 
 <!-- Modal Media Picker -->
 <div id="media-picker-modal" class="modal">
@@ -923,29 +1200,227 @@ function getContent($section) {
 </div>
 
 <script>
-// Tabs
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-        tab.classList.add('active');
-        document.getElementById('tab-' + tab.dataset.tab).style.display = 'block';
+// ==================== SEO ANALYSIS ENGINE ====================
+
+const SEO_CONFIG = {
+    pageTitle: <?= json_encode($page['title']) ?>,
+    heroTitle: <?= json_encode($page['hero_title']) ?>,
+    heroSubtitle: <?= json_encode($page['hero_subtitle']) ?>,
+    slug: <?= json_encode($page['slug']) ?>
+};
+
+// Analyse SEO en temps réel
+function analyzeSEO() {
+    const checks = [];
+    let score = 100;
+
+    const metaTitle = document.getElementById('seo-meta-title')?.value || '';
+    const metaDesc = document.getElementById('seo-meta-desc')?.value || '';
+    const heroTitle = SEO_CONFIG.heroTitle || '';
+
+    // 1. Meta Title
+    if (!metaTitle) {
+        checks.push({ type: 'error', icon: '🔴', text: 'Meta title manquant - essentiel pour le SEO' });
+        score -= 25;
+    } else if (metaTitle.length < 30) {
+        checks.push({ type: 'warning', icon: '🟡', text: 'Meta title trop court (' + metaTitle.length + ' car.) - visez 50-60' });
+        score -= 10;
+    } else if (metaTitle.length > 60) {
+        checks.push({ type: 'warning', icon: '🟡', text: 'Meta title trop long (' + metaTitle.length + ' car.) - risque de troncature' });
+        score -= 5;
+    } else {
+        checks.push({ type: 'success', icon: '✅', text: 'Meta title de bonne longueur' });
+    }
+
+    // 2. Meta Description
+    if (!metaDesc) {
+        checks.push({ type: 'error', icon: '🔴', text: 'Meta description manquante - améliore le CTR' });
+        score -= 20;
+    } else if (metaDesc.length < 70) {
+        checks.push({ type: 'warning', icon: '🟡', text: 'Meta description courte (' + metaDesc.length + ' car.) - visez 120-160' });
+        score -= 10;
+    } else if (metaDesc.length > 160) {
+        checks.push({ type: 'warning', icon: '🟡', text: 'Meta description longue (' + metaDesc.length + ' car.) - risque de troncature' });
+        score -= 5;
+    } else {
+        checks.push({ type: 'success', icon: '✅', text: 'Meta description de bonne longueur' });
+    }
+
+    // 3. H1 (Hero Title)
+    if (!heroTitle) {
+        checks.push({ type: 'error', icon: '🔴', text: 'Titre H1 manquant dans la section Hero' });
+        score -= 15;
+    } else {
+        checks.push({ type: 'success', icon: '✅', text: 'Titre H1 présent' });
+    }
+
+    // 4. Mot-clé dans le title
+    const slug = SEO_CONFIG.slug || '';
+    const slugWords = slug.split('-').filter(w => w.length > 3);
+    const titleLower = metaTitle.toLowerCase();
+    const hasKeywordInTitle = slugWords.some(w => titleLower.includes(w));
+
+    if (slugWords.length && !hasKeywordInTitle) {
+        checks.push({ type: 'info', icon: '💡', text: 'Conseil : incluez le mot-clé principal dans le title' });
+        score -= 5;
+    }
+
+    // 5. Calcul du nombre de mots
+    const wordCount = countPageWords();
+    updateWordCount(wordCount);
+
+    if (wordCount < 100) {
+        checks.push({ type: 'warning', icon: '📝', text: 'Contenu court (' + wordCount + ' mots) - ajoutez du contenu' });
+        score -= 10;
+    } else if (wordCount >= 300) {
+        checks.push({ type: 'success', icon: '📊', text: 'Bon volume de contenu (' + wordCount + ' mots)' });
+    }
+
+    // Normaliser le score
+    score = Math.max(0, Math.min(100, score));
+
+    // Mettre à jour l'UI
+    updateSEOScore(score);
+    updateSEOChecks(checks);
+    updatePreview(metaTitle, metaDesc);
+    updateCounters(metaTitle.length, metaDesc.length);
+}
+
+function countPageWords() {
+    let text = '';
+
+    // Hero
+    text += ' ' + (SEO_CONFIG.heroTitle || '');
+    text += ' ' + (SEO_CONFIG.heroSubtitle || '');
+
+    // Blocs de contenu
+    document.querySelectorAll('.blocks-container').forEach(container => {
+        container.querySelectorAll('input, textarea').forEach(input => {
+            text += ' ' + (input.value || '');
+        });
     });
+
+    // Sections items
+    document.querySelectorAll('.item-card input').forEach(input => {
+        text += ' ' + (input.value || '');
+    });
+
+    return text.split(/\s+/).filter(w => w.length > 0).length;
+}
+
+function updateWordCount(count) {
+    const el = document.getElementById('word-count-value');
+    const bar = document.getElementById('word-count-progress');
+
+    if (el) el.textContent = count + ' mots';
+
+    if (bar) {
+        const percent = Math.min(100, (count / 500) * 100);
+        bar.style.width = percent + '%';
+
+        if (count < 100) {
+            bar.style.background = '#ef4444';
+        } else if (count < 300) {
+            bar.style.background = '#f59e0b';
+        } else {
+            bar.style.background = '#22c55e';
+        }
+    }
+}
+
+function updateSEOScore(score) {
+    const scoreEl = document.getElementById('seo-score-number');
+    const progressEl = document.getElementById('seo-progress');
+    const textEl = document.getElementById('seo-score-text');
+
+    if (scoreEl) scoreEl.textContent = score;
+
+    if (progressEl) {
+        const circumference = 100;
+        const dashArray = (score / 100) * circumference;
+        progressEl.style.strokeDasharray = dashArray + ' ' + circumference;
+
+        let color = '#22c55e';
+        if (score < 50) color = '#ef4444';
+        else if (score < 75) color = '#f59e0b';
+        progressEl.setAttribute('stroke', color);
+    }
+
+    if (textEl) {
+        if (score >= 75) {
+            textEl.textContent = 'Excellent !';
+            textEl.style.color = '#16a34a';
+        } else if (score >= 50) {
+            textEl.textContent = 'À améliorer';
+            textEl.style.color = '#d97706';
+        } else {
+            textEl.textContent = 'Optimisation requise';
+            textEl.style.color = '#dc2626';
+        }
+    }
+}
+
+function updateSEOChecks(checks) {
+    const container = document.getElementById('seo-checks');
+    if (!container) return;
+
+    container.innerHTML = checks.map(check => `
+        <div class="seo-check-item ${check.type}">
+            <span class="seo-check-icon">${check.icon}</span>
+            <span class="seo-check-text">${check.text}</span>
+        </div>
+    `).join('');
+}
+
+function updatePreview(title, desc) {
+    const titleEl = document.getElementById('preview-title');
+    const descEl = document.getElementById('preview-desc');
+
+    if (titleEl) titleEl.textContent = title || SEO_CONFIG.pageTitle || 'Titre de la page';
+    if (descEl) descEl.textContent = desc || 'Ajoutez une meta description...';
+}
+
+function updateCounters(titleLen, descLen) {
+    const titleCount = document.getElementById('title-count');
+    const titleCounter = document.getElementById('title-counter');
+    const descCount = document.getElementById('desc-count');
+    const descCounter = document.getElementById('desc-counter');
+
+    if (titleCount) titleCount.textContent = titleLen;
+    if (titleCounter) {
+        titleCounter.className = 'seo-counter ' + (titleLen > 60 ? 'bad' : titleLen >= 30 ? 'good' : 'warn');
+    }
+
+    if (descCount) descCount.textContent = descLen;
+    if (descCounter) {
+        descCounter.className = 'seo-counter ' + (descLen > 160 ? 'bad' : descLen >= 70 ? 'good' : 'warn');
+    }
+}
+
+// Écouteurs pour mise à jour en temps réel
+document.getElementById('seo-meta-title')?.addEventListener('input', analyzeSEO);
+document.getElementById('seo-meta-desc')?.addEventListener('input', analyzeSEO);
+
+// Analyse initiale
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(analyzeSEO, 500);
 });
+
+// Réanalyser lors de la modification des blocs
+const observer = new MutationObserver(() => {
+    setTimeout(analyzeSEO, 100);
+});
+document.querySelectorAll('.blocks-container').forEach(container => {
+    observer.observe(container, { childList: true, subtree: true, characterData: true });
+});
+
+// ==================== FIN SEO ANALYSIS ====================
 
 // Toggle section collapse
 function toggleSection(id) {
     const section = document.getElementById('section-' + id);
     section.classList.toggle('collapsed');
 }
-
-// Compteurs SEO
-document.querySelector('input[name="meta_title"]')?.addEventListener('input', function() {
-    document.getElementById('meta-title-count').textContent = this.value.length;
-});
-document.querySelector('textarea[name="meta_description"]')?.addEventListener('input', function() {
-    document.getElementById('meta-desc-count').textContent = this.value.length;
-});
 
 // Media Picker
 let currentMediaTarget = null;
