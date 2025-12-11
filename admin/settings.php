@@ -1,6 +1,15 @@
 <?php
+/**
+ * RÉGLAGES - Back-Office Taxi Julien
+ * Paramètres globaux du site avec mise à jour du fichier de configuration
+ */
+declare(strict_types=1);
+
+require_once 'config.php';
+require_once 'includes/generator.php';
+requireLogin();
+
 $pageTitle = 'Réglages';
-require_once 'includes/header.php';
 
 // Récupérer tous les paramètres
 $result = supabase()->select('settings');
@@ -75,7 +84,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['change_password'])) 
     }
 
     if ($success) {
-        setFlash('success', 'Paramètres enregistrés avec succès');
+        // Mettre à jour le fichier site-config.json pour le générateur
+        $generator = pageGenerator();
+        $siteConfig = [
+            'site_name' => $settings['site_name'],
+            'phone' => $settings['contact_phone'],
+            'phone_link' => '+33' . preg_replace('/\D/', '', $settings['contact_phone']),
+            'email' => $settings['contact_email'],
+            'address' => $settings['contact_address'],
+            'hours' => '24h/24, 7j/7',
+            'whatsapp' => preg_replace('/\D/', '', $settings['whatsapp']) ?: ('33' . preg_replace('/\D/', '', $settings['contact_phone'])),
+            'social' => [
+                'facebook' => $settings['facebook_url'],
+                'instagram' => $settings['instagram_url']
+            ],
+            'seo' => [
+                'title_suffix' => ' | ' . $settings['site_name'],
+                'default_og_image' => '/images/og-image.jpg'
+            ]
+        ];
+        $generator->saveSiteConfig($siteConfig);
+
+        // Proposer de régénérer toutes les pages
+        setFlash('success', 'Paramètres enregistrés ! Les modifications de contact seront visibles après republication des pages.');
+        logActivity('update', 'settings', null, ['keys' => array_keys($settings)]);
     } else {
         setFlash('danger', 'Erreur lors de l\'enregistrement');
     }
@@ -115,6 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     header('Location: settings.php#security');
     exit;
 }
+
+require_once 'includes/header.php';
 ?>
 
 <style>

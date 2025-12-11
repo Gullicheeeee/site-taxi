@@ -6,6 +6,7 @@
 declare(strict_types=1);
 
 require_once 'config.php';
+require_once 'includes/generator.php';
 requireLogin();
 
 $id = $_GET['id'] ?? '';
@@ -184,6 +185,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             setFlash('success', 'Ordre mis à jour');
         }
+    }
+
+    // ============================================
+    // ACTION: Publier la page (générer le HTML)
+    // ============================================
+    if ($action === 'publish_page') {
+        // Récupérer les données actuelles de la page
+        $pageResult = supabase()->select('pages', 'id=eq.' . urlencode($id));
+        if ($pageResult['success'] && !empty($pageResult['data'])) {
+            $pageData = $pageResult['data'][0];
+
+            // Récupérer les sections
+            $sectionsResult = supabase()->select('page_sections', 'page_id=eq.' . urlencode($id) . '&order=display_order.asc');
+            $sectionsData = $sectionsResult['success'] ? $sectionsResult['data'] : [];
+
+            // Mettre à jour le statut en "published"
+            supabase()->update('pages', 'id=eq.' . urlencode($id), [
+                'status' => 'published',
+                'published_at' => date('c'),
+                'updated_at' => date('c')
+            ]);
+
+            // Générer le fichier HTML
+            $generator = pageGenerator();
+            $result = $generator->generatePage($pageData, $sectionsData);
+
+            if ($result['success']) {
+                setFlash('success', 'Page publiée ! Le fichier ' . $result['file'] . ' a été généré.');
+                logActivity('publish', 'page', $id, ['file' => $result['file']]);
+            } else {
+                setFlash('danger', 'Erreur lors de la publication : ' . $result['message']);
+            }
+        } else {
+            setFlash('danger', 'Page non trouvée');
+        }
+    }
+
+    // ============================================
+    // ACTION: Dépublier la page (supprimer le HTML)
+    // ============================================
+    if ($action === 'unpublish_page') {
+        // Mettre à jour le statut en "draft"
+        supabase()->update('pages', 'id=eq.' . urlencode($id), [
+            'status' => 'draft',
+            'updated_at' => date('c')
+        ]);
+
+        // Supprimer le fichier HTML
+        $generator = pageGenerator();
+        $generator->deletePage($page['slug']);
+
+        setFlash('success', 'Page dépubliée. Le fichier HTML a été supprimé.');
+        logActivity('unpublish', 'page', $id);
     }
 
     header('Location: page-edit.php?id=' . urlencode($id) . '#sections');
@@ -685,11 +739,29 @@ function getContent($section) {
 <div class="page-header d-flex justify-between align-center">
     <div>
         <h2 class="page-title"><?= e($page['title']) ?></h2>
-        <p class="page-subtitle">slug: <?= e($page['slug']) ?></p>
+        <p class="page-subtitle">
+            slug: <?= e($page['slug']) ?>
+            <?php if (($page['status'] ?? 'draft') === 'published'): ?>
+            <span class="badge badge-success" style="margin-left: 0.5rem;">Publiée</span>
+            <?php else: ?>
+            <span class="badge badge-warning" style="margin-left: 0.5rem;">Brouillon</span>
+            <?php endif; ?>
+        </p>
     </div>
-    <div style="display: flex; gap: 1rem;">
-        <a href="../<?= e($page['slug']) ?>.html" target="_blank" class="btn btn-secondary">👁️ Voir la page</a>
-        <a href="pages.php" class="btn btn-secondary">← Retour</a>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        <a href="../<?= e($page['slug']) ?>.html" target="_blank" class="btn btn-secondary">Voir la page</a>
+        <?php if (($page['status'] ?? 'draft') === 'published'): ?>
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="action" value="unpublish_page">
+            <button type="submit" class="btn btn-warning" onclick="return confirm('Dépublier cette page ? Le fichier HTML sera supprimé.')">Dépublier</button>
+        </form>
+        <?php else: ?>
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="action" value="publish_page">
+            <button type="submit" class="btn btn-success" style="background: #16a34a; border-color: #16a34a;">Publier</button>
+        </form>
+        <?php endif; ?>
+        <a href="pages.php" class="btn btn-secondary">&larr; Retour</a>
     </div>
 </div>
 

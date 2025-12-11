@@ -1,6 +1,15 @@
 <?php
+/**
+ * ÉDITEUR D'ARTICLE - Back-Office Taxi Julien
+ * Éditeur WYSIWYG avec génération HTML statique
+ */
+declare(strict_types=1);
+
+require_once 'config.php';
+require_once 'includes/generator.php';
+requireLogin();
+
 $pageTitle = 'Éditeur d\'article';
-require_once 'includes/header.php';
 
 $id = $_GET['id'] ?? null;
 $post = null;
@@ -39,6 +48,68 @@ if ($post && !empty($post['tags'])) {
 
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? 'save';
+
+    // ============================================
+    // ACTION: Publier l'article (générer le HTML)
+    // ============================================
+    if ($action === 'publish_post' && $id) {
+        // Récupérer les données actuelles
+        $postResult = supabase()->select('blog_posts', 'id=eq.' . urlencode($id));
+        if ($postResult['success'] && !empty($postResult['data'])) {
+            $postData = $postResult['data'][0];
+
+            // Mettre à jour le statut
+            supabase()->update('blog_posts', 'id=eq.' . urlencode($id), [
+                'status' => 'published',
+                'is_published' => true,
+                'published_at' => $postData['published_at'] ?? date('c'),
+                'updated_at' => date('c')
+            ]);
+
+            // Générer le fichier HTML
+            $generator = pageGenerator();
+            $result = $generator->generateBlogPost($postData);
+
+            if ($result['success']) {
+                // Mettre à jour aussi la liste du blog
+                $generator->updateBlogList();
+                setFlash('success', 'Article publié ! Le fichier ' . $result['file'] . ' a été généré.');
+                logActivity('publish', 'blog_post', $id, ['file' => $result['file']]);
+            } else {
+                setFlash('danger', 'Erreur lors de la publication : ' . $result['message']);
+            }
+        }
+
+        header('Location: blog-edit.php?id=' . urlencode($id));
+        exit;
+    }
+
+    // ============================================
+    // ACTION: Dépublier l'article
+    // ============================================
+    if ($action === 'unpublish_post' && $id) {
+        supabase()->update('blog_posts', 'id=eq.' . urlencode($id), [
+            'status' => 'draft',
+            'is_published' => false,
+            'updated_at' => date('c')
+        ]);
+
+        // Supprimer le fichier HTML
+        $generator = pageGenerator();
+        $generator->deleteBlogPost($post['slug']);
+        $generator->updateBlogList();
+
+        setFlash('success', 'Article dépublié. Le fichier HTML a été supprimé.');
+        logActivity('unpublish', 'blog_post', $id);
+
+        header('Location: blog-edit.php?id=' . urlencode($id));
+        exit;
+    }
+
+    // ============================================
+    // ACTION: Sauvegarder l'article (sans publier)
+    // ============================================
     $title = trim($_POST['title'] ?? '');
     $slug = trim($_POST['slug'] ?? '');
     $content = $_POST['content'] ?? '';
@@ -89,6 +160,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = supabase()->update('blog_posts', 'id=eq.' . urlencode($id), $data);
         if ($result['success']) {
             setFlash('success', 'Article mis à jour');
+
+            // Si l'article est publié, régénérer le HTML
+            if ($isPublished || ($post && $post['is_published'])) {
+                $generator = pageGenerator();
+                $postData = array_merge($post ?? [], $data);
+                $generator->generateBlogPost($postData);
+                $generator->updateBlogList();
+            }
         } else {
             setFlash('danger', 'Erreur: ' . ($result['error'] ?? 'Inconnu'));
         }
@@ -116,6 +195,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Récupérer les images pour le picker
 $mediaResult = supabase()->select('media', 'order=uploaded_at.desc');
 $mediaList = $mediaResult['success'] ? $mediaResult['data'] : [];
+
+require_once 'includes/header.php';
 ?>
 
 <div class="page-header d-flex justify-between align-center">
@@ -132,9 +213,23 @@ $mediaList = $mediaResult['success'] ? $mediaResult['data'] : [];
         </p>
         <?php endif; ?>
     </div>
-    <div style="display: flex; gap: 0.5rem;">
-        <button type="button" class="btn btn-secondary" onclick="openPreview()">👁️ Prévisualiser</button>
-        <a href="blog.php" class="btn btn-secondary">← Retour</a>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <?php if ($id && $post): ?>
+        <a href="../blog/<?= e($post['slug']) ?>.html" target="_blank" class="btn btn-secondary">Voir l'article</a>
+        <?php if ($post['is_published']): ?>
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="action" value="unpublish_post">
+            <button type="submit" class="btn btn-warning" onclick="return confirm('Dépublier cet article ? Le fichier HTML sera supprimé.')">Dépublier</button>
+        </form>
+        <?php else: ?>
+        <form method="POST" style="display: inline;">
+            <input type="hidden" name="action" value="publish_post">
+            <button type="submit" class="btn btn-success" style="background: #16a34a; border-color: #16a34a;">Publier</button>
+        </form>
+        <?php endif; ?>
+        <?php endif; ?>
+        <button type="button" class="btn btn-secondary" onclick="openPreview()">Prévisualiser</button>
+        <a href="blog.php" class="btn btn-secondary">&larr; Retour</a>
     </div>
 </div>
 
