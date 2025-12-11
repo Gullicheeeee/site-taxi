@@ -72,56 +72,72 @@ class PageGenerator {
             // Construire le contenu des sections
             $sectionsHtml = $this->buildSectionsHtml($sections);
 
-            // Construire le hero
-            $heroHtml = $this->buildHeroHtml($page);
+            // Déterminer le slug pour le fichier
+            $slug = $page['slug'];
+            $filename = $slug === 'index' ? 'index.html' : $slug . '.html';
 
-            // Préparer les données de remplacement
+            // Canonical URL
+            $canonical = $slug === 'index'
+                ? $this->siteUrl . '/'
+                : $this->siteUrl . '/' . $filename;
+
+            // Préparer les remplacements
             $replacements = [
-                '{{meta_title}}' => $this->e($page['meta_title'] ?: $page['title'] . ($this->siteConfig['seo']['title_suffix'] ?? '')),
+                // SEO Meta
+                '{{meta_title}}' => $this->e($page['meta_title'] ?: $page['title']),
                 '{{meta_description}}' => $this->e($page['meta_description'] ?? ''),
                 '{{meta_keywords}}' => $this->e($page['meta_keywords'] ?? ''),
-                '{{canonical}}' => $this->siteUrl . '/' . $page['slug'] . '.html',
+                '{{canonical}}' => $canonical,
                 '{{og_title}}' => $this->e($page['meta_title'] ?: $page['title']),
                 '{{og_description}}' => $this->e($page['meta_description'] ?? ''),
-                '{{og_image}}' => $page['hero_image'] ?: ($this->siteUrl . ($this->siteConfig['seo']['default_og_image'] ?? '/images/og-image.jpg')),
-                '{{og_url}}' => $this->siteUrl . '/' . $page['slug'] . '.html',
-                '{{page_title}}' => $this->e($page['title']),
+                '{{og_image}}' => $this->siteUrl . ($this->siteConfig['seo']['default_og_image'] ?? '/images/og-image.jpg'),
+                '{{og_url}}' => $canonical,
+
+                // Hero
                 '{{hero_title}}' => $this->e($page['hero_title'] ?? $page['title']),
                 '{{hero_subtitle}}' => $this->e($page['hero_subtitle'] ?? ''),
-                '{{hero_image}}' => $page['hero_image'] ?? '',
-                '{{hero_section}}' => $heroHtml,
+                '{{hero_badges}}' => $this->buildHeroBadges($page),
+                '{{hero_cta}}' => $this->buildHeroCta($page),
+
+                // Contenu
                 '{{content}}' => $sectionsHtml,
-                '{{slug}}' => $page['slug'],
-                '{{current_year}}' => date('Y'),
-                '{{updated_at}}' => date('Y-m-d'),
+
+                // Navigation active
+                '{{nav_active_index}}' => $slug === 'index' ? ' active' : '',
+                '{{nav_active_services}}' => in_array($slug, ['services', 'conventionne', 'aeroports-gares', 'longues-distances', 'courses-classiques', 'mise-a-disposition']) ? ' active' : '',
+                '{{nav_active_simulateur}}' => $slug === 'simulateur' ? ' active' : '',
+                '{{nav_active_blog}}' => $slug === 'blog' ? ' active' : '',
+                '{{nav_active_apropos}}' => $slug === 'a-propos' ? ' active' : '',
+                '{{nav_active_contact}}' => $slug === 'contact' ? ' active' : '',
+
                 // Config du site
                 '{{site_name}}' => $this->e($this->siteConfig['site_name'] ?? 'Taxi Julien'),
-                '{{phone}}' => $this->e($this->siteConfig['phone'] ?? ''),
-                '{{phone_link}}' => $this->e($this->siteConfig['phone_link'] ?? ''),
-                '{{email}}' => $this->e($this->siteConfig['email'] ?? ''),
-                '{{address}}' => $this->e($this->siteConfig['address'] ?? ''),
-                '{{hours}}' => $this->e($this->siteConfig['hours'] ?? ''),
-                '{{whatsapp}}' => $this->e($this->siteConfig['whatsapp'] ?? ''),
+                '{{phone}}' => $this->e($this->siteConfig['phone'] ?? '01 23 45 67 89'),
+                '{{phone_link}}' => $this->e($this->siteConfig['phone_link'] ?? '+33123456789'),
+                '{{email}}' => $this->e($this->siteConfig['email'] ?? 'contact@taxijulien.fr'),
+                '{{address}}' => $this->e($this->siteConfig['address'] ?? 'Martigues, Bouches-du-Rhône (13)'),
+                '{{hours}}' => $this->e($this->siteConfig['hours'] ?? '24h/24, 7j/7'),
+                '{{whatsapp}}' => $this->e($this->siteConfig['whatsapp'] ?? '33123456789'),
+                '{{current_year}}' => date('Y'),
+
+                // Schema JSON-LD
+                '{{schema_json}}' => $this->generateSchema($page),
+
+                // Scripts supplémentaires (pour certaines pages comme simulateur)
+                '{{extra_scripts}}' => $this->getExtraScripts($slug),
             ];
 
             // Appliquer les remplacements
             $html = str_replace(array_keys($replacements), array_values($replacements), $template);
 
-            // Inclure header et footer
-            $html = $this->includePartials($html, $page['slug']);
-
-            // Générer le schema JSON-LD
-            $schema = $this->generateSchema($page);
-            $html = str_replace('{{schema_json}}', $schema, $html);
-
             // Écrire le fichier
-            $filename = $this->outputDir . $page['slug'] . '.html';
-            if (file_put_contents($filename, $html) !== false) {
+            $filepath = $this->outputDir . $filename;
+            if (file_put_contents($filepath, $html) !== false) {
                 $result['success'] = true;
                 $result['message'] = 'Page générée avec succès';
-                $result['file'] = $page['slug'] . '.html';
+                $result['file'] = $filename;
             } else {
-                $result['message'] = 'Erreur lors de l\'écriture du fichier';
+                $result['message'] = 'Erreur lors de l\'écriture du fichier ' . $filename;
             }
         } catch (Exception $e) {
             $result['message'] = 'Erreur: ' . $e->getMessage();
@@ -131,28 +147,32 @@ class PageGenerator {
     }
 
     /**
-     * Construire le HTML du hero
+     * Construire les badges du hero
      */
-    private function buildHeroHtml(array $page): string {
-        if (empty($page['hero_title'])) {
-            return '';
+    private function buildHeroBadges(array $page): string {
+        // Badges par défaut pour la page d'accueil
+        if ($page['slug'] === 'index') {
+            return '
+            <div class="badges-container">
+                <span class="badge">✓ Agréé CPAM</span>
+                <span class="badge">✓ Disponible 24/7</span>
+                <span class="badge">✓ Véhicule Premium</span>
+                <span class="badge">✓ Ponctualité Garantie</span>
+            </div>';
         }
+        return '';
+    }
 
-        $heroTitle = $this->e($page['hero_title']);
-        $heroSubtitle = $this->e($page['hero_subtitle'] ?? '');
-
-        $html = '<section class="hero">';
-        $html .= '<div class="container hero-content">';
-        $html .= '<h1>' . $heroTitle . '</h1>';
-
-        if ($heroSubtitle) {
-            $html .= '<p class="hero-subtitle">' . $heroSubtitle . '</p>';
-        }
-
-        $html .= '</div>';
-        $html .= '</section>';
-
-        return $html;
+    /**
+     * Construire les CTA du hero
+     */
+    private function buildHeroCta(array $page): string {
+        // CTA par défaut
+        return '
+            <div class="cta-buttons">
+                <a href="reservation.html" class="btn btn-primary btn-large">Réserver un Taxi</a>
+                <a href="simulateur.html" class="btn btn-secondary btn-large">Estimer un Trajet</a>
+            </div>';
     }
 
     /**
@@ -177,9 +197,6 @@ class PageGenerator {
             $type = $section['section_type'] ?? 'text';
 
             switch ($type) {
-                case 'hero':
-                    $html .= $this->renderHeroSection($section, $content);
-                    break;
                 case 'cards':
                     $html .= $this->renderCardsSection($section, $content);
                     break;
@@ -195,11 +212,8 @@ class PageGenerator {
                 case 'list':
                     $html .= $this->renderListSection($section, $content);
                     break;
-                case 'image_text':
-                    $html .= $this->renderImageTextSection($section, $content);
-                    break;
-                case 'contact_info':
-                    $html .= $this->renderContactInfoSection($section, $content);
+                case 'simulator':
+                    $html .= $this->renderSimulatorSection($section, $content);
                     break;
                 default:
                     $html .= $this->renderTextSection($section, $content);
@@ -210,153 +224,117 @@ class PageGenerator {
     }
 
     /**
-     * Rendre une section Hero
-     */
-    private function renderHeroSection(array $section, array $content): string {
-        $html = '<section class="hero">';
-        $html .= '<div class="container hero-content">';
-
-        if (!empty($content['title'])) {
-            $html .= '<h1>' . $this->e($content['title']) . '</h1>';
-        }
-
-        if (!empty($content['subtitle'])) {
-            $html .= '<p class="hero-subtitle">' . $this->e($content['subtitle']) . '</p>';
-        }
-
-        // Badges
-        if (!empty($content['badges']) && is_array($content['badges'])) {
-            $html .= '<div class="badges-container">';
-            foreach ($content['badges'] as $badge) {
-                $html .= '<span class="badge">' . $this->e($badge) . '</span>';
-            }
-            $html .= '</div>';
-        }
-
-        // CTAs
-        if (!empty($content['cta_primary_text']) || !empty($content['cta_secondary_text'])) {
-            $html .= '<div class="cta-buttons">';
-            if (!empty($content['cta_primary_text'])) {
-                $html .= '<a href="' . $this->e($content['cta_primary_url'] ?? '#') . '" class="btn btn-primary btn-large">' . $this->e($content['cta_primary_text']) . '</a>';
-            }
-            if (!empty($content['cta_secondary_text'])) {
-                $html .= '<a href="' . $this->e($content['cta_secondary_url'] ?? '#') . '" class="btn btn-secondary btn-large">' . $this->e($content['cta_secondary_text']) . '</a>';
-            }
-            $html .= '</div>';
-        }
-
-        $html .= '</div>';
-        $html .= '</section>';
-
-        return $html;
-    }
-
-    /**
-     * Rendre une section de cartes
+     * Rendre une section de cartes (services)
      */
     private function renderCardsSection(array $section, array $content): string {
-        $html = '<section class="section">';
-        $html .= '<div class="container">';
+        $html = '<section class="section">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
-        if (!empty($content['title']) || !empty($content['subtitle'])) {
-            $html .= '<div class="section-title">';
-            if (!empty($content['title'])) {
-                $html .= '<h2>' . $this->e($content['title']) . '</h2>';
-            }
+        if (!empty($content['title'])) {
+            $html .= '            <div class="section-title">' . "\n";
+            $html .= '                <h2>' . $this->e($content['title']) . '</h2>' . "\n";
             if (!empty($content['subtitle'])) {
-                $html .= '<p>' . $this->e($content['subtitle']) . '</p>';
+                $html .= '                <p>' . $this->e($content['subtitle']) . '</p>' . "\n";
             }
-            $html .= '</div>';
+            $html .= '            </div>' . "\n";
         }
 
         if (!empty($content['items']) && is_array($content['items'])) {
-            $html .= '<div class="cards-grid">';
+            $html .= "\n" . '            <div class="cards-grid">' . "\n";
             foreach ($content['items'] as $item) {
-                $html .= '<div class="card">';
+                $html .= '                <div class="card">' . "\n";
                 if (!empty($item['icon'])) {
-                    $html .= '<span class="card-icon">' . $this->e($item['icon']) . '</span>';
+                    $html .= '                    <span class="card-icon">' . $item['icon'] . '</span>' . "\n";
                 }
                 if (!empty($item['title'])) {
-                    $html .= '<h3 class="card-title">' . $this->e($item['title']) . '</h3>';
+                    $html .= '                    <h3 class="card-title">' . $this->e($item['title']) . '</h3>' . "\n";
                 }
                 if (!empty($item['text'])) {
-                    $html .= '<p class="card-text">' . $this->e($item['text']) . '</p>';
+                    $html .= '                    <p class="card-text">' . $this->e($item['text']) . '</p>' . "\n";
                 }
                 if (!empty($item['link_url']) && !empty($item['link_text'])) {
-                    $html .= '<a href="' . $this->e($item['link_url']) . '" style="color: var(--accent-dark); font-weight: 600;">' . $this->e($item['link_text']) . '</a>';
+                    $html .= '                    <a href="' . $this->e($item['link_url']) . '" style="color: var(--accent-dark); font-weight: 600;">' . $this->e($item['link_text']) . '</a>' . "\n";
                 }
-                $html .= '</div>';
+                $html .= '                </div>' . "\n";
             }
-            $html .= '</div>';
+            $html .= '            </div>' . "\n";
         }
 
-        $html .= '</div>';
-        $html .= '</section>';
+        if (!empty($content['cta_text']) && !empty($content['cta_url'])) {
+            $html .= "\n" . '            <div class="text-center mt-4">' . "\n";
+            $html .= '                <a href="' . $this->e($content['cta_url']) . '" class="btn btn-primary">' . $this->e($content['cta_text']) . '</a>' . "\n";
+            $html .= '            </div>' . "\n";
+        }
+
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
 
     /**
-     * Rendre une section Features
+     * Rendre une section Features (pourquoi nous choisir)
      */
     private function renderFeaturesSection(array $section, array $content): string {
-        $html = '<section class="section features">';
-        $html .= '<div class="container">';
+        $html = '<section class="section features">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
         if (!empty($content['title'])) {
-            $html .= '<div class="section-title">';
-            $html .= '<h2>' . $this->e($content['title']) . '</h2>';
-            $html .= '</div>';
+            $html .= '            <div class="section-title">' . "\n";
+            $html .= '                <h2>' . $this->e($content['title']) . '</h2>' . "\n";
+            $html .= '            </div>' . "\n";
         }
 
         if (!empty($content['items']) && is_array($content['items'])) {
-            $html .= '<div class="cards-grid">';
+            $html .= "\n" . '            <div class="cards-grid">' . "\n";
             foreach ($content['items'] as $item) {
-                $html .= '<div class="feature-item">';
+                $html .= '                <div class="feature-item">' . "\n";
                 if (!empty($item['icon'])) {
-                    $html .= '<span class="feature-icon">' . $this->e($item['icon']) . '</span>';
+                    $html .= '                    <span class="feature-icon">' . $item['icon'] . '</span>' . "\n";
                 }
-                $html .= '<div class="feature-content">';
+                $html .= '                    <div class="feature-content">' . "\n";
                 if (!empty($item['title'])) {
-                    $html .= '<h3>' . $this->e($item['title']) . '</h3>';
+                    $html .= '                        <h3>' . $this->e($item['title']) . '</h3>' . "\n";
                 }
                 if (!empty($item['text'])) {
-                    $html .= '<p>' . $this->e($item['text']) . '</p>';
+                    $html .= '                        <p>' . $this->e($item['text']) . '</p>' . "\n";
                 }
-                $html .= '</div>';
-                $html .= '</div>';
+                $html .= '                    </div>' . "\n";
+                $html .= '                </div>' . "\n";
             }
-            $html .= '</div>';
+            $html .= '            </div>' . "\n";
         }
 
-        $html .= '</div>';
-        $html .= '</section>';
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
 
     /**
-     * Rendre une section de texte
+     * Rendre une section de texte simple
      */
     private function renderTextSection(array $section, array $content): string {
-        $html = '<section class="section">';
-        $html .= '<div class="container">';
+        $html = '<section class="section">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
         if (!empty($content['title'])) {
-            $html .= '<div class="section-title">';
-            $html .= '<h2>' . $this->e($content['title']) . '</h2>';
-            $html .= '</div>';
+            $html .= '            <div class="section-title">' . "\n";
+            $html .= '                <h2>' . $this->e($content['title']) . '</h2>' . "\n";
+            if (!empty($content['subtitle'])) {
+                $html .= '                <p>' . $this->e($content['subtitle']) . '</p>' . "\n";
+            }
+            $html .= '            </div>' . "\n";
         }
 
         if (!empty($content['text'])) {
-            $html .= '<div class="content-block">';
-            // Le texte peut contenir du HTML formaté par l'éditeur
-            $html .= $content['text'];
-            $html .= '</div>';
+            $html .= '            <div class="content-block">' . "\n";
+            $html .= '                ' . $content['text'] . "\n";
+            $html .= '            </div>' . "\n";
         }
 
-        $html .= '</div>';
-        $html .= '</section>';
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
@@ -365,136 +343,109 @@ class PageGenerator {
      * Rendre une section CTA
      */
     private function renderCtaSection(array $section, array $content): string {
-        $bgClass = ($content['background'] ?? 'primary') === 'primary'
-            ? 'style="background: var(--primary); color: white; text-align: center;"'
-            : 'style="background: var(--light-gray); text-align: center;"';
+        $bg = ($content['background'] ?? 'primary') === 'primary'
+            ? 'background: var(--primary); color: white;'
+            : 'background: var(--light-gray);';
 
-        $html = '<section class="section" ' . $bgClass . '>';
-        $html .= '<div class="container">';
+        $html = '<section class="section" style="' . $bg . ' text-align: center;">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
         if (!empty($content['title'])) {
             $textColor = ($content['background'] ?? 'primary') === 'primary' ? ' style="color: white;"' : '';
-            $html .= '<h2' . $textColor . '>' . $this->e($content['title']) . '</h2>';
+            $html .= '            <h2' . $textColor . '>' . $this->e($content['title']) . '</h2>' . "\n";
         }
 
         if (!empty($content['subtitle'])) {
-            $html .= '<p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">' . $this->e($content['subtitle']) . '</p>';
+            $html .= '            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">' . $this->e($content['subtitle']) . '</p>' . "\n";
         }
 
-        if (!empty($content['cta_primary_text']) || !empty($content['cta_secondary_text'])) {
-            $html .= '<div class="cta-buttons">';
-            if (!empty($content['cta_primary_text'])) {
-                $html .= '<a href="' . $this->e($content['cta_primary_url'] ?? '#') . '" class="btn btn-primary btn-large">' . $this->e($content['cta_primary_text']) . '</a>';
-            }
-            if (!empty($content['cta_secondary_text'])) {
-                $html .= '<a href="' . $this->e($content['cta_secondary_url'] ?? '#') . '" class="btn btn-secondary btn-large">' . $this->e($content['cta_secondary_text']) . '</a>';
-            }
-            $html .= '</div>';
+        $html .= '            <div class="cta-buttons">' . "\n";
+        if (!empty($content['cta_primary_text'])) {
+            $html .= '                <a href="' . $this->e($content['cta_primary_url'] ?? 'reservation.html') . '" class="btn btn-primary btn-large">' . $this->e($content['cta_primary_text']) . '</a>' . "\n";
         }
+        if (!empty($content['cta_secondary_text'])) {
+            $html .= '                <a href="' . $this->e($content['cta_secondary_url'] ?? '#') . '" class="btn btn-secondary btn-large">' . $this->e($content['cta_secondary_text']) . '</a>' . "\n";
+        }
+        $html .= '            </div>' . "\n";
 
-        $html .= '</div>';
-        $html .= '</section>';
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
 
     /**
-     * Rendre une section liste
+     * Rendre une section liste (zone d'intervention)
      */
     private function renderListSection(array $section, array $content): string {
-        $html = '<section class="section">';
-        $html .= '<div class="container">';
+        $html = '<section class="section">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
-        if (!empty($content['title']) || !empty($content['subtitle'])) {
-            $html .= '<div class="section-title">';
-            if (!empty($content['title'])) {
-                $html .= '<h2>' . $this->e($content['title']) . '</h2>';
-            }
+        if (!empty($content['title'])) {
+            $html .= '            <div class="section-title">' . "\n";
+            $html .= '                <h2>' . $this->e($content['title']) . '</h2>' . "\n";
             if (!empty($content['subtitle'])) {
-                $html .= '<p>' . $this->e($content['subtitle']) . '</p>';
+                $html .= '                <p>' . $this->e($content['subtitle']) . '</p>' . "\n";
             }
-            $html .= '</div>';
+            $html .= '            </div>' . "\n";
         }
 
         if (!empty($content['items']) && is_array($content['items'])) {
-            $html .= '<div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md); max-width: 800px; margin: 0 auto;">';
-            $html .= '<ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; list-style: none;">';
+            $html .= "\n" . '            <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md); max-width: 800px; margin: 0 auto;">' . "\n";
+            $html .= '                <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; list-style: none;">' . "\n";
             foreach ($content['items'] as $item) {
-                $text = $item['title'] ?? $item['text'] ?? '';
-                $icon = $item['icon'] ?? '✓';
-                $html .= '<li style="display: flex; align-items: center; gap: 0.5rem;">';
-                $html .= '<span style="color: var(--secondary-color);">' . $this->e($icon) . '</span> ' . $this->e($text);
-                $html .= '</li>';
+                $text = is_string($item) ? $item : ($item['title'] ?? $item['text'] ?? '');
+                $html .= '                    <li style="display: flex; align-items: center; gap: 0.5rem;">' . "\n";
+                $html .= '                        <span style="color: var(--secondary-color);">✓</span> ' . $this->e($text) . "\n";
+                $html .= '                    </li>' . "\n";
             }
-            $html .= '</ul>';
-            $html .= '</div>';
+            $html .= '                </ul>' . "\n";
+            $html .= '            </div>' . "\n";
         }
 
-        $html .= '</div>';
-        $html .= '</section>';
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
 
     /**
-     * Rendre une section Image + Texte
+     * Rendre la section simulateur
      */
-    private function renderImageTextSection(array $section, array $content): string {
-        $position = $content['image_position'] ?? 'left';
-        $flexDirection = $position === 'right' ? 'row-reverse' : 'row';
+    private function renderSimulatorSection(array $section, array $content): string {
+        $html = '<section class="section" style="background: var(--light-gray);">' . "\n";
+        $html .= '        <div class="container">' . "\n";
 
-        $html = '<section class="section">';
-        $html .= '<div class="container">';
-        $html .= '<div style="display: flex; flex-direction: ' . $flexDirection . '; gap: 3rem; align-items: center; flex-wrap: wrap;">';
+        $html .= '            <div class="section-title">' . "\n";
+        $html .= '                <h2>' . $this->e($content['title'] ?? 'Estimez le Prix de votre Course') . '</h2>' . "\n";
+        $html .= '                <p>' . $this->e($content['subtitle'] ?? 'Calculez instantanément le tarif de votre trajet') . '</p>' . "\n";
+        $html .= '            </div>' . "\n";
 
-        // Image
-        if (!empty($section['image'])) {
-            $html .= '<div style="flex: 1; min-width: 300px;">';
-            $html .= '<img src="' . $this->e($section['image']) . '" alt="' . $this->e($content['title'] ?? '') . '" style="width: 100%; border-radius: 15px; box-shadow: var(--shadow-lg);">';
-            $html .= '</div>';
-        }
+        $html .= '
+            <div class="simulator-container">
+                <form id="quick-simulator">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quick-depart" class="form-label">Adresse de départ</label>
+                            <input type="text" id="quick-depart" class="form-control" placeholder="Ex: Martigues" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quick-arrivee" class="form-label">Adresse d\'arrivée</label>
+                            <input type="text" id="quick-arrivee" class="form-control" placeholder="Ex: Aéroport Marseille" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Calculer le Prix</button>
+                </form>
+                <div class="price-result" id="quick-result">
+                    <h3>Estimation de votre course</h3>
+                    <div class="price-amount">-- €</div>
+                    <a href="reservation.html" class="btn btn-secondary mt-3">Réserver ce Trajet</a>
+                </div>
+            </div>
+        ';
 
-        // Texte
-        $html .= '<div style="flex: 1; min-width: 300px;">';
-        if (!empty($content['title'])) {
-            $html .= '<h2>' . $this->e($content['title']) . '</h2>';
-        }
-        if (!empty($content['text'])) {
-            $html .= '<div class="content-block">' . $content['text'] . '</div>';
-        }
-        $html .= '</div>';
-
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</section>';
-
-        return $html;
-    }
-
-    /**
-     * Rendre une section infos de contact
-     */
-    private function renderContactInfoSection(array $section, array $content): string {
-        $html = '<section class="section">';
-        $html .= '<div class="container">';
-        $html .= '<div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md); max-width: 600px; margin: 0 auto;">';
-
-        if (!empty($content['phone'])) {
-            $html .= '<p style="margin-bottom: 1rem;"><strong>Téléphone :</strong> <a href="tel:' . preg_replace('/\s+/', '', $content['phone']) . '">' . $this->e($content['phone']) . '</a></p>';
-        }
-        if (!empty($content['email'])) {
-            $html .= '<p style="margin-bottom: 1rem;"><strong>Email :</strong> <a href="mailto:' . $this->e($content['email']) . '">' . $this->e($content['email']) . '</a></p>';
-        }
-        if (!empty($content['address'])) {
-            $html .= '<p style="margin-bottom: 1rem;"><strong>Adresse :</strong> ' . $this->e($content['address']) . '</p>';
-        }
-        if (!empty($content['hours'])) {
-            $html .= '<p><strong>Horaires :</strong> ' . $this->e($content['hours']) . '</p>';
-        }
-
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</section>';
+        $html .= '        </div>' . "\n";
+        $html .= '    </section>' . "\n";
 
         return $html;
     }
@@ -511,87 +462,23 @@ class PageGenerator {
     }
 
     /**
-     * Inclure les partials (header, footer)
-     */
-    private function includePartials(string $html, string $currentSlug): string {
-        // Header
-        $header = $this->loadTemplate('partials/header.html');
-        if ($header) {
-            // Marquer le lien actif
-            $header = $this->setActiveNavLink($header, $currentSlug);
-            $html = str_replace('{{> header}}', $header, $html);
-        }
-
-        // Footer
-        $footer = $this->loadTemplate('partials/footer.html');
-        if ($footer) {
-            $footer = str_replace([
-                '{{phone}}',
-                '{{phone_link}}',
-                '{{email}}',
-                '{{address}}',
-                '{{hours}}',
-                '{{whatsapp}}',
-                '{{current_year}}'
-            ], [
-                $this->e($this->siteConfig['phone'] ?? ''),
-                $this->e($this->siteConfig['phone_link'] ?? ''),
-                $this->e($this->siteConfig['email'] ?? ''),
-                $this->e($this->siteConfig['address'] ?? ''),
-                $this->e($this->siteConfig['hours'] ?? ''),
-                $this->e($this->siteConfig['whatsapp'] ?? ''),
-                date('Y')
-            ], $footer);
-            $html = str_replace('{{> footer}}', $footer, $html);
-        }
-
-        return $html;
-    }
-
-    /**
-     * Définir le lien de navigation actif
-     */
-    private function setActiveNavLink(string $header, string $slug): string {
-        // Retirer tous les "active" existants
-        $header = str_replace(' active', '', $header);
-
-        // Mapper les slugs aux patterns de navigation
-        $navMap = [
-            'index' => 'href="index.html"',
-            'services' => 'href="services.html"',
-            'conventionné' => 'href="services.html"',
-            'aeroports-gares' => 'href="services.html"',
-            'longues-distances' => 'href="services.html"',
-            'courses-classiques' => 'href="services.html"',
-            'mise-a-disposition' => 'href="services.html"',
-            'simulateur' => 'href="simulateur.html"',
-            'blog' => 'href="blog.html"',
-            'a-propos' => 'href="a-propos.html"',
-            'contact' => 'href="contact.html"',
-        ];
-
-        if (isset($navMap[$slug])) {
-            $pattern = $navMap[$slug];
-            $header = str_replace(
-                $pattern . ' class="nav-link"',
-                $pattern . ' class="nav-link active"',
-                $header
-            );
-        }
-
-        return $header;
-    }
-
-    /**
      * Générer le schema JSON-LD
      */
     private function generateSchema(array $page): string {
+        $slug = $page['slug'];
+
+        // Schema LocalBusiness pour la page d'accueil
+        if ($slug === 'index') {
+            return $this->generateHomeSchema();
+        }
+
+        // Schema simple pour les autres pages
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'WebPage',
             'name' => $page['meta_title'] ?: $page['title'],
             'description' => $page['meta_description'] ?? '',
-            'url' => $this->siteUrl . '/' . $page['slug'] . '.html',
+            'url' => $this->siteUrl . '/' . ($slug === 'index' ? '' : $slug . '.html'),
             'isPartOf' => [
                 '@type' => 'WebSite',
                 'name' => 'Taxi Julien',
@@ -599,7 +486,6 @@ class PageGenerator {
             ]
         ];
 
-        // Breadcrumb
         $breadcrumb = [
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
@@ -614,13 +500,83 @@ class PageGenerator {
                     '@type' => 'ListItem',
                     'position' => 2,
                     'name' => $page['title'],
-                    'item' => $this->siteUrl . '/' . $page['slug'] . '.html'
+                    'item' => $this->siteUrl . '/' . $slug . '.html'
                 ]
             ]
         ];
 
-        return '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n"
-             . '    <script type="application/ld+json">' . json_encode($breadcrumb, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+        return '<script type="application/ld+json">' . "\n    " . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n    </script>\n\n    "
+             . '<script type="application/ld+json">' . "\n    " . json_encode($breadcrumb, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n    </script>";
+    }
+
+    /**
+     * Schema complet pour la page d'accueil
+     */
+    private function generateHomeSchema(): string {
+        $phone = $this->siteConfig['phone_link'] ?? '+33123456789';
+
+        $taxiService = [
+            '@context' => 'https://schema.org',
+            '@type' => 'TaxiService',
+            '@id' => $this->siteUrl . '/#taxiservice',
+            'name' => 'Taxi Julien',
+            'description' => 'Service de taxi conventionné CPAM à Martigues. Transport médical, aéroports, gares et longues distances. Disponible 24h/24, 7j/7.',
+            'url' => $this->siteUrl,
+            'telephone' => $phone,
+            'email' => $this->siteConfig['email'] ?? 'contact@taxijulien.fr',
+            'priceRange' => '€€',
+            'image' => $this->siteUrl . '/images/og-image.jpg',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => 'Martigues',
+                'postalCode' => '13500',
+                'addressRegion' => 'Bouches-du-Rhône',
+                'addressCountry' => 'FR'
+            ],
+            'geo' => [
+                '@type' => 'GeoCoordinates',
+                'latitude' => 43.4051,
+                'longitude' => 5.0476
+            ],
+            'openingHoursSpecification' => [
+                '@type' => 'OpeningHoursSpecification',
+                'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                'opens' => '00:00',
+                'closes' => '23:59'
+            ]
+        ];
+
+        $breadcrumb = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => 'Accueil',
+                    'item' => $this->siteUrl . '/'
+                ]
+            ]
+        ];
+
+        return '<script type="application/ld+json">' . "\n    " . json_encode($taxiService, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n    </script>\n\n    "
+             . '<script type="application/ld+json">' . "\n    " . json_encode($breadcrumb, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n    </script>";
+    }
+
+    /**
+     * Scripts supplémentaires pour certaines pages
+     */
+    private function getExtraScripts(string $slug): string {
+        if ($slug === 'simulateur') {
+            return '<script src="js/simulateur.js"></script>';
+        }
+        if ($slug === 'reservation') {
+            return '<script src="js/reservation.js"></script>';
+        }
+        if ($slug === 'contact') {
+            return '<script src="js/contact.js"></script>';
+        }
+        return '';
     }
 
     /**
@@ -636,23 +592,24 @@ class PageGenerator {
                 return $result;
             }
 
+            $publishedDate = date('d/m/Y', strtotime($post['published_at'] ?? $post['created_at'] ?? 'now'));
+            $publishedIso = date('c', strtotime($post['published_at'] ?? $post['created_at'] ?? 'now'));
+
             $replacements = [
-                '{{meta_title}}' => $this->e($post['meta_title'] ?: $post['title'] . ($this->siteConfig['seo']['title_suffix'] ?? '')),
+                '{{meta_title}}' => $this->e($post['meta_title'] ?: $post['title'] . ' | Taxi Julien'),
                 '{{meta_description}}' => $this->e($post['meta_description'] ?? $post['excerpt'] ?? ''),
                 '{{canonical}}' => $this->siteUrl . '/blog/' . $post['slug'] . '.html',
                 '{{og_title}}' => $this->e($post['meta_title'] ?: $post['title']),
                 '{{og_description}}' => $this->e($post['meta_description'] ?? $post['excerpt'] ?? ''),
-                '{{og_image}}' => $post['featured_image'] ?? ($this->siteUrl . ($this->siteConfig['seo']['default_og_image'] ?? '/images/og-image.jpg')),
+                '{{og_image}}' => $post['featured_image'] ?? ($this->siteUrl . '/images/og-image.jpg'),
                 '{{og_url}}' => $this->siteUrl . '/blog/' . $post['slug'] . '.html',
                 '{{title}}' => $this->e($post['title']),
                 '{{content}}' => $post['content'] ?? '',
                 '{{excerpt}}' => $this->e($post['excerpt'] ?? ''),
                 '{{featured_image}}' => $post['featured_image'] ?? '',
                 '{{author}}' => $this->e($post['author_name'] ?? 'Taxi Julien'),
-                '{{published_date}}' => date('d/m/Y', strtotime($post['published_at'] ?? $post['created_at'] ?? 'now')),
-                '{{published_iso}}' => date('c', strtotime($post['published_at'] ?? $post['created_at'] ?? 'now')),
-                '{{slug}}' => $post['slug'],
-                '{{current_year}}' => date('Y'),
+                '{{published_date}}' => $publishedDate,
+                '{{published_iso}}' => $publishedIso,
                 '{{site_name}}' => $this->e($this->siteConfig['site_name'] ?? 'Taxi Julien'),
                 '{{phone}}' => $this->e($this->siteConfig['phone'] ?? ''),
                 '{{phone_link}}' => $this->e($this->siteConfig['phone_link'] ?? ''),
@@ -660,16 +617,13 @@ class PageGenerator {
                 '{{address}}' => $this->e($this->siteConfig['address'] ?? ''),
                 '{{hours}}' => $this->e($this->siteConfig['hours'] ?? ''),
                 '{{whatsapp}}' => $this->e($this->siteConfig['whatsapp'] ?? ''),
+                '{{current_year}}' => date('Y'),
+                '{{schema_json}}' => $this->generateArticleSchema($post),
             ];
 
             $html = str_replace(array_keys($replacements), array_values($replacements), $template);
-            $html = $this->includePartials($html, 'blog');
 
-            // Schema pour l'article
-            $articleSchema = $this->generateArticleSchema($post);
-            $html = str_replace('{{schema_json}}', $articleSchema, $html);
-
-            // S'assurer que le dossier blog existe
+            // Créer le dossier blog si nécessaire
             $blogDir = $this->outputDir . 'blog/';
             if (!is_dir($blogDir)) {
                 mkdir($blogDir, 0755, true);
@@ -691,7 +645,7 @@ class PageGenerator {
     }
 
     /**
-     * Générer le schema JSON-LD pour un article
+     * Schema JSON-LD pour un article
      */
     private function generateArticleSchema(array $post): string {
         $schema = [
@@ -713,11 +667,10 @@ class PageGenerator {
                     '@type' => 'ImageObject',
                     'url' => $this->siteUrl . '/images/logo.png'
                 ]
-            ],
-            'mainEntityOfPage' => $this->siteUrl . '/blog/' . $post['slug'] . '.html'
+            ]
         ];
 
-        return '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+        return '<script type="application/ld+json">' . "\n    " . json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n    </script>";
     }
 
     /**
@@ -727,14 +680,8 @@ class PageGenerator {
         $result = ['success' => false, 'message' => ''];
 
         try {
-            // Récupérer tous les articles publiés
             $postsResult = supabase()->select('blog_posts', 'status=eq.published&order=published_at.desc');
-            if (!$postsResult['success']) {
-                $result['message'] = 'Erreur lors de la récupération des articles';
-                return $result;
-            }
-
-            $posts = $postsResult['data'] ?? [];
+            $posts = ($postsResult['success'] ?? false) ? ($postsResult['data'] ?? []) : [];
 
             $template = $this->loadTemplate('blog-list.html');
             if (!$template) {
@@ -742,19 +689,20 @@ class PageGenerator {
                 return $result;
             }
 
-            // Construire la liste des articles
             $articlesHtml = '';
             foreach ($posts as $post) {
                 $articlesHtml .= $this->renderBlogCard($post);
             }
 
+            if (empty($articlesHtml)) {
+                $articlesHtml = '<p style="text-align: center; color: var(--gray-500);">Aucun article publié pour le moment.</p>';
+            }
+
             $replacements = [
-                '{{meta_title}}' => 'Blog - Actualités Taxi Martigues' . ($this->siteConfig['seo']['title_suffix'] ?? ''),
-                '{{meta_description}}' => 'Retrouvez tous nos conseils et actualités sur le transport en taxi à Martigues : transport médical, aéroports, astuces voyage.',
+                '{{meta_title}}' => 'Blog - Actualités Taxi | Taxi Julien Martigues',
+                '{{meta_description}}' => 'Retrouvez nos conseils et actualités sur le transport en taxi à Martigues.',
                 '{{canonical}}' => $this->siteUrl . '/blog.html',
                 '{{articles}}' => $articlesHtml,
-                '{{articles_count}}' => count($posts),
-                '{{current_year}}' => date('Y'),
                 '{{site_name}}' => $this->e($this->siteConfig['site_name'] ?? 'Taxi Julien'),
                 '{{phone}}' => $this->e($this->siteConfig['phone'] ?? ''),
                 '{{phone_link}}' => $this->e($this->siteConfig['phone_link'] ?? ''),
@@ -762,17 +710,16 @@ class PageGenerator {
                 '{{address}}' => $this->e($this->siteConfig['address'] ?? ''),
                 '{{hours}}' => $this->e($this->siteConfig['hours'] ?? ''),
                 '{{whatsapp}}' => $this->e($this->siteConfig['whatsapp'] ?? ''),
+                '{{current_year}}' => date('Y'),
             ];
 
             $html = str_replace(array_keys($replacements), array_values($replacements), $template);
-            $html = $this->includePartials($html, 'blog');
 
-            $filename = $this->outputDir . 'blog.html';
-            if (file_put_contents($filename, $html) !== false) {
+            if (file_put_contents($this->outputDir . 'blog.html', $html) !== false) {
                 $result['success'] = true;
                 $result['message'] = 'Page blog mise à jour';
             } else {
-                $result['message'] = 'Erreur lors de l\'écriture du fichier';
+                $result['message'] = 'Erreur lors de l\'écriture';
             }
         } catch (Exception $e) {
             $result['message'] = 'Erreur: ' . $e->getMessage();
@@ -786,25 +733,26 @@ class PageGenerator {
      */
     private function renderBlogCard(array $post): string {
         $date = date('d/m/Y', strtotime($post['published_at'] ?? $post['created_at'] ?? 'now'));
-        $html = '<article class="blog-card">';
+
+        $html = '<article class="blog-card">' . "\n";
 
         if (!empty($post['featured_image'])) {
-            $html .= '<a href="blog/' . $this->e($post['slug']) . '.html" class="blog-card-image">';
-            $html .= '<img src="' . $this->e($post['featured_image']) . '" alt="' . $this->e($post['title']) . '">';
-            $html .= '</a>';
+            $html .= '    <a href="blog/' . $this->e($post['slug']) . '.html" class="blog-card-image">' . "\n";
+            $html .= '        <img src="' . $this->e($post['featured_image']) . '" alt="' . $this->e($post['title']) . '">' . "\n";
+            $html .= '    </a>' . "\n";
         }
 
-        $html .= '<div class="blog-card-content">';
-        $html .= '<span class="blog-card-date">' . $date . '</span>';
-        $html .= '<h3 class="blog-card-title"><a href="blog/' . $this->e($post['slug']) . '.html">' . $this->e($post['title']) . '</a></h3>';
+        $html .= '    <div class="blog-card-content">' . "\n";
+        $html .= '        <span class="blog-card-date">' . $date . '</span>' . "\n";
+        $html .= '        <h3 class="blog-card-title"><a href="blog/' . $this->e($post['slug']) . '.html">' . $this->e($post['title']) . '</a></h3>' . "\n";
 
         if (!empty($post['excerpt'])) {
-            $html .= '<p class="blog-card-excerpt">' . $this->e($post['excerpt']) . '</p>';
+            $html .= '        <p class="blog-card-excerpt">' . $this->e($post['excerpt']) . '</p>' . "\n";
         }
 
-        $html .= '<a href="blog/' . $this->e($post['slug']) . '.html" class="blog-card-link">Lire la suite &rarr;</a>';
-        $html .= '</div>';
-        $html .= '</article>';
+        $html .= '        <a href="blog/' . $this->e($post['slug']) . '.html" class="blog-card-link">Lire la suite →</a>' . "\n";
+        $html .= '    </div>' . "\n";
+        $html .= '</article>' . "\n";
 
         return $html;
     }
@@ -837,13 +785,11 @@ class PageGenerator {
     public function regenerateAllPages(): array {
         $results = [];
 
-        // Récupérer toutes les pages publiées
         $pagesResult = supabase()->select('pages', 'status=eq.published');
-        if ($pagesResult['success'] && !empty($pagesResult['data'])) {
+        if (($pagesResult['success'] ?? false) && !empty($pagesResult['data'])) {
             foreach ($pagesResult['data'] as $page) {
-                // Récupérer les sections
                 $sectionsResult = supabase()->select('page_sections', 'page_id=eq.' . $page['id'] . '&order=display_order.asc');
-                $sections = $sectionsResult['success'] ? $sectionsResult['data'] : [];
+                $sections = ($sectionsResult['success'] ?? false) ? ($sectionsResult['data'] ?? []) : [];
 
                 $results[$page['slug']] = $this->generatePage($page, $sections);
             }
@@ -859,13 +805,12 @@ class PageGenerator {
         $results = [];
 
         $postsResult = supabase()->select('blog_posts', 'status=eq.published');
-        if ($postsResult['success'] && !empty($postsResult['data'])) {
+        if (($postsResult['success'] ?? false) && !empty($postsResult['data'])) {
             foreach ($postsResult['data'] as $post) {
                 $results[$post['slug']] = $this->generateBlogPost($post);
             }
         }
 
-        // Mettre à jour la liste du blog
         $results['blog_list'] = $this->updateBlogList();
 
         return $results;

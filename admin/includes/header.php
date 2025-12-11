@@ -352,6 +352,10 @@ $notifCount = count($notifications);
                     <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                     <span>Régénérer le site</span>
                 </a>
+                <a href="init-database.php" class="nav-link <?= $currentPage === 'init-database' ? 'active' : '' ?>">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    <span>Initialisation BDD</span>
+                </a>
             </nav>
 
             <div style="padding: 1rem; margin-top: auto; border-top: 1px solid var(--gray-200);">

@@ -9,12 +9,15 @@
     <title>{{meta_title}}</title>
     <meta name="description" content="{{meta_description}}">
     <meta name="keywords" content="{{meta_keywords}}">
-    <meta name="robots" content="index, follow">
+    <meta name="author" content="Taxi Julien">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="{{canonical}}">
 
     <!-- Geo Tags -->
     <meta name="geo.region" content="FR-13">
     <meta name="geo.placename" content="Martigues">
+    <meta name="geo.position" content="43.4051;5.0476">
+    <meta name="ICBM" content="43.4051, 5.0476">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -24,6 +27,9 @@
     <meta property="og:title" content="{{og_title}}">
     <meta property="og:description" content="{{og_description}}">
     <meta property="og:image" content="{{og_image}}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{og_title}}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -31,9 +37,12 @@
     <meta name="twitter:description" content="{{og_description}}">
     <meta name="twitter:image" content="{{og_image}}">
 
-    <!-- Mobile -->
+    <!-- Mobile & PWA -->
     <meta name="theme-color" content="#1a1a2e">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Taxi Julien">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -41,9 +50,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="images/favicon.png">
 
-    <!-- Preconnect -->
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
@@ -53,26 +63,131 @@
 </head>
 <body>
 
-    {{> header}}
+    <!-- HEADER & NAVIGATION -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">🚖</span>
+                    <span>Taxi Julien</span>
+                </a>
+
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    ☰
+                </button>
+
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link{{nav_active_index}}">Accueil</a></li>
+                    <li class="nav-item">
+                        <a href="services.html" class="nav-link{{nav_active_services}}">Services</a>
+                        <div class="nav-dropdown">
+                            <a href="conventionne.html" class="nav-dropdown-item">Transport Conventionné</a>
+                            <a href="aeroports-gares.html" class="nav-dropdown-item">Aéroports & Gares</a>
+                            <a href="longues-distances.html" class="nav-dropdown-item">Longues Distances</a>
+                            <a href="courses-classiques.html" class="nav-dropdown-item">Courses Classiques</a>
+                            <a href="mise-a-disposition.html" class="nav-dropdown-item">Mise à Disposition</a>
+                        </div>
+                    </li>
+                    <li><a href="simulateur.html" class="nav-link{{nav_active_simulateur}}">Simulateur</a></li>
+                    <li><a href="blog.html" class="nav-link{{nav_active_blog}}">Blog</a></li>
+                    <li><a href="a-propos.html" class="nav-link{{nav_active_apropos}}">À propos</a></li>
+                    <li><a href="contact.html" class="nav-link{{nav_active_contact}}">Contact</a></li>
+                    <li><a href="reservation.html" class="btn btn-primary">Réserver</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
     <!-- BANDEAU TÉLÉPHONE STICKY -->
     <div class="phone-bar">
         <a href="tel:{{phone_link}}">
-            Appelez-nous : {{phone}}
+            📞 Appelez-nous : {{phone}}
         </a>
     </div>
 
     <!-- HERO SECTION -->
-    {{hero_section}}
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>{{hero_title}}</h1>
+            <p class="hero-subtitle">{{hero_subtitle}}</p>
+            {{hero_badges}}
+            {{hero_cta}}
+        </div>
+    </section>
 
     <!-- CONTENU PRINCIPAL -->
     <main>
         {{content}}
     </main>
 
-    {{> footer}}
+    <!-- CALL TO ACTION FINAL -->
+    <section class="section" style="background: var(--primary); color: white; text-align: center;">
+        <div class="container">
+            <h2 style="color: white; font-size: 2.5rem; margin-bottom: 1rem;">Besoin d'un Taxi Maintenant ?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">Réservez en ligne ou appelez-nous directement</p>
+            <div class="cta-buttons">
+                <a href="reservation.html" class="btn btn-primary btn-large">Réserver en Ligne</a>
+                <a href="tel:{{phone_link}}" class="btn btn-secondary btn-large">📞 Appeler Maintenant</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Taxi Julien</h3>
+                    <p>Votre taxi conventionné de confiance à Martigues depuis plus de 10 ans.</p>
+                    <p style="margin-top: 1rem;">
+                        <strong>Agréé CPAM</strong><br>
+                        Licence de taxi professionnelle
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Liens Rapides</h3>
+                    <ul>
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="conventionne.html">Taxi Conventionné</a></li>
+                        <li><a href="services.html">Nos Services</a></li>
+                        <li><a href="simulateur.html">Simulateur de Prix</a></li>
+                        <li><a href="a-propos.html">À Propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>📞 <a href="tel:{{phone_link}}">{{phone}}</a></li>
+                        <li>📧 <a href="mailto:{{email}}">{{email}}</a></li>
+                        <li>📍 {{address}}</li>
+                        <li>🕒 Disponible {{hours}}</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Horaires</h3>
+                    <p><strong>Service 24/7</strong></p>
+                    <p>Disponible jour et nuit<br>
+                    Week-end et jours fériés</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="https://wa.me/{{whatsapp}}" style="display: inline-block; background: #25d366; color: white; padding: 0.5rem 1rem; border-radius: 5px; margin-top: 0.5rem;">
+                            💬 WhatsApp
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; {{current_year}} Taxi Julien - Tous droits réservés | <a href="mentions-legales.html">Mentions Légales</a> | <a href="mentions-legales.html#rgpd">Politique de Confidentialité</a></p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script src="js/main.js"></script>
+    {{extra_scripts}}
 </body>
 </html>
