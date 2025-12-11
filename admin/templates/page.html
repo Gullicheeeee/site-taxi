@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- SEO Primary -->
+    <title>{{meta_title}}</title>
+    <meta name="description" content="{{meta_description}}">
+    <meta name="keywords" content="{{meta_keywords}}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{canonical}}">
+
+    <!-- Geo Tags -->
+    <meta name="geo.region" content="FR-13">
+    <meta name="geo.placename" content="Martigues">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{site_name}}">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:url" content="{{og_url}}">
+    <meta property="og:title" content="{{og_title}}">
+    <meta property="og:description" content="{{og_description}}">
+    <meta property="og:image" content="{{og_image}}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{og_title}}">
+    <meta name="twitter:description" content="{{og_description}}">
+    <meta name="twitter:image" content="{{og_image}}">
+
+    <!-- Mobile -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Schema.org Structured Data -->
+    {{schema_json}}
+</head>
+<body>
+
+    {{> header}}
+
+    <!-- BANDEAU TÉLÉPHONE STICKY -->
+    <div class="phone-bar">
+        <a href="tel:{{phone_link}}">
+            Appelez-nous : {{phone}}
+        </a>
+    </div>
+
+    <!-- HERO SECTION -->
+    {{hero_section}}
+
+    <!-- CONTENU PRINCIPAL -->
+    <main>
+        {{content}}
+    </main>
+
+    {{> footer}}
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>

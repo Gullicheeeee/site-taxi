@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- SEO Primary -->
+    <title>{{meta_title}}</title>
+    <meta name="description" content="{{meta_description}}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{canonical}}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="{{site_name}}">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:url" content="{{og_url}}">
+    <meta property="og:title" content="{{og_title}}">
+    <meta property="og:description" content="{{og_description}}">
+    <meta property="og:image" content="{{og_image}}">
+    <meta property="article:published_time" content="{{published_iso}}">
+    <meta property="article:author" content="{{author}}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{og_title}}">
+    <meta name="twitter:description" content="{{og_description}}">
+    <meta name="twitter:image" content="{{og_image}}">
+
+    <!-- Mobile -->
+    <meta name="theme-color" content="#1a1a2e">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Schema.org Structured Data -->
+    {{schema_json}}
+</head>
+<body>
+
+    {{> header}}
+
+    <!-- BANDEAU TELEPHONE STICKY -->
+    <div class="phone-bar">
+        <a href="tel:{{phone_link}}">
+            Appelez-nous : {{phone}}
+        </a>
+    </div>
+
+    <!-- ARTICLE -->
+    <article class="blog-article">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="Fil d'Ariane">
+                <a href="../index.html">Accueil</a>
+                <span>/</span>
+                <a href="../blog.html">Blog</a>
+                <span>/</span>
+                <span>{{title}}</span>
+            </nav>
+
+            <!-- Header de l'article -->
+            <header class="article-header">
+                <h1>{{title}}</h1>
+                <div class="article-meta">
+                    <span class="article-date">
+                        <time datetime="{{published_iso}}">{{published_date}}</time>
+                    </span>
+                    <span class="article-author">Par {{author}}</span>
+                </div>
+            </header>
+
+            <!-- Image mise en avant -->
+            {{#featured_image}}
+            <figure class="article-featured-image">
+                <img src="{{featured_image}}" alt="{{title}}" loading="lazy">
+            </figure>
+            {{/featured_image}}
+
+            <!-- Contenu de l'article -->
+            <div class="article-content">
+                {{content}}
+            </div>
+
+            <!-- CTA -->
+            <div class="article-cta" style="background: var(--light-gray); padding: 2rem; border-radius: 15px; margin-top: 3rem; text-align: center;">
+                <h3>Besoin d'un taxi ?</h3>
+                <p>Reservez votre course en ligne ou appelez-nous directement.</p>
+                <div class="cta-buttons" style="margin-top: 1.5rem;">
+                    <a href="../reservation.html" class="btn btn-primary">Reserver en ligne</a>
+                    <a href="tel:{{phone_link}}" class="btn btn-secondary">Appeler maintenant</a>
+                </div>
+            </div>
+
+            <!-- Partage social -->
+            <div class="article-share" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
+                <p style="font-weight: 600; margin-bottom: 1rem;">Partager cet article :</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{og_url}}" target="_blank" rel="noopener" style="color: #1877f2;">Facebook</a>
+                    <a href="https://twitter.com/intent/tweet?url={{og_url}}&text={{og_title}}" target="_blank" rel="noopener" style="color: #1da1f2;">Twitter</a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{og_url}}&title={{og_title}}" target="_blank" rel="noopener" style="color: #0077b5;">LinkedIn</a>
+                </div>
+            </div>
+
+            <!-- Navigation articles -->
+            <div class="article-navigation" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
+                <a href="../blog.html" style="color: var(--primary); font-weight: 600;">&larr; Retour au blog</a>
+            </div>
+        </div>
+    </article>
+
+    {{> footer}}
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+</body>
+</html>
