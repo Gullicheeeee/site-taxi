@@ -598,171 +598,90 @@ p {
   animation: fadeInUp 0.8s ease-out 0.6s both;
 }
 
-/* === SYSTÈME DE CARTES ADAPTATIF === */
+/* === SYSTÈME DE CARTES - SCROLL NATIF === */
 
-/* Variables du système */
 .cards-grid {
-  --card-min-width: 280px;
-  --card-max-width: 320px;
+  --card-width: 300px;
   --card-gap: var(--space-6);
-  --peek-amount: 60px;
 
-  position: relative;
+  display: flex;
+  gap: var(--card-gap);
   margin-top: var(--space-12);
+
+  /* Scroll horizontal natif */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  /* Cacher scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Espace respiration avec peek effect */
+  padding: var(--space-4) 0;
+  margin-left: calc(-1 * var(--space-6));
+  margin-right: calc(-1 * var(--space-6));
+  padding-left: var(--space-6);
+  padding-right: calc(var(--space-6) + 60px);
 }
 
-/* Mode GRILLE (≤ 4 cartes) - Centré par défaut */
-.cards-grid:not(.cards-slider) {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--card-gap);
+.cards-grid::-webkit-scrollbar {
+  display: none;
 }
 
-.cards-grid:not(.cards-slider) .card {
-  flex: 0 1 var(--card-min-width);
-  max-width: var(--card-max-width);
+/* Cartes uniformes */
+.cards-grid .card {
+  flex: 0 0 var(--card-width);
+  scroll-snap-align: start;
 }
 
-/* Mode SLIDER (> 4 cartes) */
-.cards-grid.cards-slider {
-  display: flex;
-  overflow: hidden;
+/* === FADE EFFECT SUR LE BORD DROIT === */
+
+.cards-grid-wrapper {
   position: relative;
+  overflow: hidden;
 }
 
-.cards-slider .cards-track {
-  display: flex;
-  gap: var(--card-gap);
-  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-  padding-right: var(--peek-amount);
-  will-change: transform;
-}
-
-.cards-slider .card {
-  flex: 0 0 calc((100% - var(--peek-amount) - (var(--card-gap) * 3)) / 4);
-  min-width: var(--card-min-width);
-}
-
-/* Fade effect sur les bords */
-.cards-slider::before,
-.cards-slider::after {
+.cards-grid-wrapper::after {
   content: '';
   position: absolute;
   top: 0;
+  right: 0;
   bottom: 0;
-  width: 40px;
-  z-index: 2;
+  width: 80px;
+  background: linear-gradient(to left, var(--off-white, #f8f9fa), transparent);
   pointer-events: none;
+  z-index: 1;
 }
 
-.cards-slider::before {
-  left: 0;
-  background: linear-gradient(to right, var(--off-white), transparent);
+/* Cacher le fade quand on est à la fin */
+.cards-grid-wrapper.scrolled-end::after {
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-.cards-slider::after {
-  right: 0;
-  background: linear-gradient(to left, var(--off-white), transparent);
-}
+/* === CENTRAGE AUTOMATIQUE SI PEU DE CARTES === */
 
-.cards-slider.scrolled::before {
-  opacity: 1;
-}
-
-/* Navigation arrows */
-.cards-nav {
-  display: flex;
+/* 4 cartes ou moins : centré, pas de scroll */
+.cards-grid.cards-centered {
   justify-content: center;
-  align-items: center;
-  gap: var(--space-4);
-  margin-top: var(--space-8);
+  overflow: visible;
+  padding-right: var(--space-6);
+  flex-wrap: wrap;
+  margin-left: 0;
+  margin-right: 0;
 }
 
-.cards-nav-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid var(--gray-200);
-  background: var(--white);
-  color: var(--gray-600);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.cards-nav-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: scale(1.05);
-}
-
-.cards-nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.cards-nav-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* Dots indicator */
-.cards-dots {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.cards-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gray-300);
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  padding: 0;
-}
-
-.cards-dot.active {
-  background: var(--accent);
-  transform: scale(1.2);
-}
-
-.cards-dot:hover:not(.active) {
-  background: var(--gray-400);
+.cards-grid.cards-centered .card {
+  scroll-snap-align: unset;
+  flex: 0 1 var(--card-width);
+  max-width: 320px;
 }
 
 /* Ancien support .cards-grid-3 (rétrocompatibilité) */
 .cards-grid-3 {
-  --card-max-width: 360px;
-}
-
-/* Touch device optimizations */
-@media (hover: none) {
-  .cards-slider {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-  }
-
-  .cards-slider::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-  }
-
-  .cards-slider .card {
-    scroll-snap-align: start;
-  }
-
-  /* Cacher les boutons sur touch, garder les dots */
-  .cards-nav-btn {
-    display: none;
-  }
+  --card-width: 340px;
 }
 
 .card {
@@ -1692,10 +1611,10 @@ select.form-control {
 
 /* === RESPONSIVE === */
 
-/* Tablet - Slider avec 3 cartes */
+/* Tablet - Cartes plus petites */
 @media (max-width: 1200px) {
-  .cards-slider .card {
-    flex: 0 0 calc((100% - var(--peek-amount) - (var(--card-gap) * 2)) / 3);
+  .cards-grid {
+    --card-width: 280px;
   }
 }
 
@@ -1841,22 +1760,18 @@ select.form-control {
     gap: var(--space-4);
   }
 
-  /* Slider mobile : 1 carte + peek */
+  /* Mobile : 1 carte pleine largeur + peek */
   .cards-grid {
-    --peek-amount: 40px;
+    --card-width: calc(100vw - 4rem);
+    padding-right: calc(var(--space-6) + 40px);
   }
 
-  .cards-slider .card {
-    flex: 0 0 calc(100% - var(--peek-amount) - var(--card-gap));
+  .cards-grid .card {
+    flex: 0 0 var(--card-width);
   }
 
-  .cards-nav-btn {
-    width: 40px;
-    height: 40px;
-  }
-
-  /* Grille mobile : 1 colonne centrée */
-  .cards-grid:not(.cards-slider) .card {
+  /* Centré mobile : max-width pour éviter trop large */
+  .cards-grid.cards-centered .card {
     flex: 0 1 100%;
     max-width: 400px;
   }
