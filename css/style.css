@@ -545,12 +545,17 @@ p {
   margin-top: 2px;
 }
 
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-6);
+/* Reviews Carousel - Desktop: grille 3 cols | Mobile: swipe carousel */
+.reviews-carousel {
+  position: relative;
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.reviews-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
 }
 
 .review-card {
@@ -559,6 +564,11 @@ p {
   padding: var(--space-6);
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+
+.reviews-dots {
+  display: none;
 }
 
 .review-header {
@@ -637,12 +647,54 @@ p {
     font-size: 2rem;
   }
 
-  .reviews-grid {
-    grid-template-columns: 1fr;
+  .reviews-carousel {
+    margin: 0 calc(-1 * var(--space-4));
+  }
+
+  .reviews-track {
+    display: flex;
+    gap: var(--space-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .reviews-track::-webkit-scrollbar {
+    display: none;
   }
 
   .review-card {
+    flex: 0 0 85%;
+    min-width: 280px;
+    scroll-snap-align: center;
     padding: var(--space-5);
+  }
+
+  .reviews-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: var(--space-4);
+  }
+
+  .reviews-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gray-300);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .reviews-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--accent);
   }
 }
 
@@ -2074,10 +2126,30 @@ select.form-control {
     height: 40px;
   }
 
-  /* Grille mobile : 1 colonne centrée */
+  /* TOUTES les grilles de cartes deviennent des carrousels horizontaux sur mobile */
+  .cards-grid:not(.cards-slider) {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: var(--space-4);
+    margin-left: calc(-1 * var(--space-4));
+    margin-right: calc(-1 * var(--space-4));
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .cards-grid:not(.cards-slider)::-webkit-scrollbar {
+    display: none;
+  }
+
   .cards-grid:not(.cards-slider) .card {
-    flex: 0 1 100%;
-    max-width: 400px;
+    flex: 0 0 85%;
+    min-width: 280px;
+    max-width: none;
+    scroll-snap-align: center;
   }
 
   .card {
@@ -2580,12 +2652,11 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
 }
 
 /* ============================================
-   BENEFITS SECTION - Premium Cards + Overflow Carousel
+   BENEFITS SECTION - Horizontal Carousel (Unlimited Slides)
    ============================================ */
 
 .benefits-section {
   padding: var(--space-16) 0;
-  background: var(--gray-50);
 }
 
 .benefits-section .section-title {
@@ -2608,26 +2679,39 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   margin: 0 auto;
 }
 
-/* Featured Cards Grid - Always visible on desktop */
-.benefits-featured {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6);
-  margin-bottom: var(--space-8);
+/* Carousel Container with external arrows */
+.benefits-carousel-container {
+  position: relative;
+  padding: 0 60px;
 }
 
-/* Benefit Card */
+.benefits-carousel {
+  position: relative;
+}
+
+.benefits-carousel-wrapper {
+  overflow: hidden;
+}
+
+.benefits-track {
+  display: flex;
+  gap: var(--space-5);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Benefit Card - Fixed width for consistency */
 .benefit-card {
+  flex: 0 0 calc(33.333% - 14px);
+  min-width: 300px;
   background: var(--white);
   border-radius: var(--radius-xl);
-  padding: var(--space-8);
+  padding: var(--space-6);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--gray-100);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 100%;
 }
 
 .benefit-card:hover {
@@ -2637,82 +2721,51 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
 }
 
 .benefit-card-icon {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   color: var(--white);
   flex-shrink: 0;
 }
 
 .benefit-card-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   stroke-width: 1.5;
 }
 
 .benefit-card-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--gray-900);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
   line-height: 1.3;
 }
 
 .benefit-card-desc {
-  font-size: 0.9375rem;
-  color: var(--gray-600);
-  line-height: 1.7;
-  margin: 0;
-  flex-grow: 1;
-}
-
-/* Overflow Carousel Container */
-.benefits-overflow {
-  position: relative;
-  margin-bottom: var(--space-10);
-}
-
-.benefits-overflow-label {
-  text-align: center;
   font-size: 0.875rem;
-  color: var(--gray-500);
-  margin-bottom: var(--space-4);
-  font-weight: 500;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin: 0;
 }
 
-.benefits-carousel-wrapper {
-  position: relative;
-  overflow: hidden;
-}
-
-.benefits-carousel-track {
-  display: flex;
-  gap: var(--space-6);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.benefits-carousel-track .benefit-card {
-  flex: 0 0 calc(33.333% - var(--space-4));
-  min-width: 280px;
-}
-
-/* Overflow Carousel Arrows */
+/* Navigation Arrows - Positioned outside carousel */
 .benefits-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border: none;
   background: var(--white);
   border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   z-index: 10;
   display: flex;
@@ -2722,7 +2775,7 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   color: var(--primary-dark);
 }
 
-.benefits-arrow:hover {
+.benefits-arrow:hover:not(:disabled) {
   background: var(--accent);
   color: var(--white);
   transform: translateY(-50%) scale(1.08);
@@ -2733,57 +2786,19 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   outline-offset: 2px;
 }
 
-.benefits-arrow:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: translateY(-50%);
-}
-
-.benefits-arrow:disabled:hover {
-  background: var(--white);
-  color: var(--primary-dark);
-}
-
+/* Arrows positioned outside the container */
 .benefits-arrow-prev {
-  left: -22px;
+  left: 0;
 }
 
 .benefits-arrow-next {
-  right: -22px;
+  right: 0;
 }
 
-/* Overflow Dots */
-.benefits-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: var(--space-6);
-}
-
-.benefits-dot {
-  width: 10px;
-  height: 10px;
-  border: none;
-  border-radius: 50%;
-  background: var(--gray-300);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  padding: 0;
-}
-
-.benefits-dot:hover {
-  background: var(--gray-400);
-}
-
-.benefits-dot.active {
-  background: var(--accent);
-  width: 24px;
-  border-radius: 5px;
-}
-
-.benefits-dot:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+/* Dots et swipe hint masqués */
+.benefits-dots,
+.benefits-swipe-hint {
+  display: none !important;
 }
 
 /* CTA Section */
@@ -2792,56 +2807,113 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   justify-content: center;
   gap: var(--space-4);
   flex-wrap: wrap;
+  margin-top: var(--space-8);
 }
 
 .benefits-cta .btn {
   min-width: 180px;
 }
 
-/* ===== MOBILE: Full carousel mode ===== */
+/* ===== TABLET ===== */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .benefits-carousel-container {
+    padding: 0 50px;
+  }
+
+  .benefit-card {
+    flex: 0 0 calc(50% - 10px);
+    min-width: 280px;
+  }
+
+  /* Cards grid en carrousel tablette : 2 cartes visibles + peek */
+  .cards-grid:not(.cards-slider) {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: var(--space-5);
+    padding: var(--space-2) 0;
+  }
+
+  .cards-grid:not(.cards-slider)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cards-grid:not(.cards-slider) .card {
+    flex: 0 0 calc(50% - var(--space-3));
+    min-width: 300px;
+    max-width: none;
+    scroll-snap-align: start;
+  }
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 1024px) {
+  .benefits-carousel-container {
+    padding: 0 60px;
+  }
+
+  .benefit-card {
+    flex: 0 0 calc(33.333% - 14px);
+  }
+}
+
+/* ===== LARGE DESKTOP ===== */
+@media (min-width: 1280px) {
+  .benefits-carousel-container {
+    padding: 0 70px;
+  }
+
+  .benefits-arrow {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .benefits-section {
     padding: var(--space-12) 0;
   }
 
-  /* Hide featured grid, show mobile carousel */
-  .benefits-featured {
-    display: none;
+  .benefits-carousel-container {
+    padding: 0;
   }
 
-  .benefits-mobile-carousel {
-    display: block;
-    position: relative;
-    margin-bottom: var(--space-8);
-  }
-
-  .benefits-mobile-wrapper {
+  .benefits-carousel-wrapper {
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    margin: 0;
     padding: var(--space-2) var(--space-4);
-    margin: 0 calc(-1 * var(--space-4));
   }
 
-  .benefits-mobile-wrapper::-webkit-scrollbar {
+  .benefits-carousel-wrapper::-webkit-scrollbar {
     display: none;
   }
 
-  .benefits-mobile-track {
-    display: flex;
-    gap: var(--space-4);
+  .benefits-track {
+    transition: none;
   }
 
-  .benefits-mobile-track .benefit-card {
-    flex: 0 0 calc(87% - var(--space-2));
-    scroll-snap-align: start;
+  .benefit-card {
+    flex: 0 0 85%;
     min-width: 280px;
-    padding: var(--space-6);
+    scroll-snap-align: start;
   }
 
+  /* Hide arrows on mobile - native scroll */
+  .benefits-arrow {
+    display: none;
+  }
+
+  /* Swipe hint */
   .benefits-swipe-hint {
     text-align: center;
     font-size: 0.8125rem;
@@ -2862,9 +2934,8 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
     50% { transform: translateX(6px); }
   }
 
-  /* Hide desktop overflow */
-  .benefits-overflow {
-    display: none;
+  .benefits-dots {
+    margin-top: var(--space-4);
   }
 
   .benefits-cta {
@@ -2879,57 +2950,10 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   }
 }
 
-/* ===== TABLET: 2 columns featured ===== */
-@media (min-width: 769px) and (max-width: 1023px) {
-  .benefits-featured {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Third card goes to overflow on tablet */
-  .benefits-featured .benefit-card:nth-child(3) {
-    display: none;
-  }
-
-  .benefits-carousel-track .benefit-card {
-    flex: 0 0 calc(50% - var(--space-3));
-  }
-
-  /* Hide mobile carousel */
-  .benefits-mobile-carousel {
-    display: none;
-  }
-}
-
-/* ===== DESKTOP: 3 featured + overflow ===== */
-@media (min-width: 1024px) {
-  .benefits-featured {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  /* Hide mobile carousel */
-  .benefits-mobile-carousel {
-    display: none;
-  }
-
-  .benefits-arrow-prev {
-    left: -28px;
-  }
-
-  .benefits-arrow-next {
-    right: -28px;
-  }
-}
-
-/* No overflow case - hide overflow section */
-.benefits-overflow:empty,
-.benefits-overflow[data-count="0"] {
-  display: none;
-}
-
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .benefit-card,
-  .benefits-carousel-track,
+  .benefits-track,
   .benefits-arrow,
   .benefits-dot {
     transition: none;
