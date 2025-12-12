@@ -424,6 +424,66 @@ p {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* === STICKY CTA MOBILE === */
+.sticky-cta-mobile {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  gap: var(--space-3);
+}
+
+.sticky-cta-mobile .btn {
+  flex: 1;
+  padding: var(--space-4);
+  font-size: 1rem;
+  font-weight: 700;
+  min-height: 52px;
+  border-radius: var(--radius-lg);
+}
+
+.sticky-cta-mobile .btn-call {
+  background: var(--primary-dark);
+  color: var(--white);
+}
+
+.sticky-cta-mobile .btn-call:hover,
+.sticky-cta-mobile .btn-call:active {
+  background: var(--primary);
+}
+
+.sticky-cta-mobile .btn-book {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.sticky-cta-mobile .btn-book:hover,
+.sticky-cta-mobile .btn-book:active {
+  background: var(--accent-dark);
+}
+
+/* Afficher sur mobile */
+@media (max-width: 768px) {
+  .sticky-cta-mobile {
+    display: flex;
+  }
+
+  /* Ajouter padding en bas du body pour éviter que le contenu soit caché */
+  body {
+    padding-bottom: 80px;
+  }
+
+  /* Cacher le phone-bar sur mobile (remplacé par sticky CTA) */
+  .phone-bar {
+    display: none;
+  }
+}
+
 /* === HERO SECTION === */
 .hero {
   background: var(--primary);
