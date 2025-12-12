@@ -227,10 +227,7 @@ p {
   font-size: 1.75rem;
 }
 
-/* Hide header on scroll down, show on scroll up */
-.header.header--hidden {
-  transform: translateY(-100%);
-}
+/* Header toujours visible - plus de hide au scroll */
 
 .navbar {
   display: flex;
@@ -2034,10 +2031,6 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   .btn::after {
     display: none;
   }
-
-  .header.header--hidden {
-    transform: none;
-  }
 }
 
 /* High contrast mode support */
@@ -2181,7 +2174,7 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   line-height: 1.4;
 }
 
-/* Navigation Arrows */
+/* Navigation Arrows - Positionnées sur les côtés */
 .sf-arrow {
   position: absolute;
   top: 50%;
@@ -2191,7 +2184,7 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   border: none;
   background: var(--white);
   border-radius: 50%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   z-index: 10;
   display: flex;
@@ -2213,11 +2206,11 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
 }
 
 .sf-arrow-prev {
-  left: max(16px, 3%);
+  left: 16px;
 }
 
 .sf-arrow-next {
-  right: max(16px, 3%);
+  right: 16px;
 }
 
 /* Dots Navigation */
@@ -2332,24 +2325,24 @@ a:not(.btn):not(.nav-link):not(.logo):hover {
   }
 }
 
-/* Large Desktop */
+/* Large Desktop - Flèches toujours sur les côtés */
 @media (min-width: 1400px) {
   .sf-arrow-prev {
-    left: 6%;
+    left: 24px;
   }
 
   .sf-arrow-next {
-    right: 6%;
+    right: 24px;
   }
 }
 
 @media (min-width: 1600px) {
   .sf-arrow-prev {
-    left: 8%;
+    left: 32px;
   }
 
   .sf-arrow-next {
-    right: 8%;
+    right: 32px;
   }
 }
 
