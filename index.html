@@ -58,8 +58,6 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
     <!-- Schema.org Structured Data - LocalBusiness -->
     <script type="application/ld+json">
@@ -208,12 +206,25 @@
         <div class="container">
             <nav class="navbar" role="navigation" aria-label="Navigation principale">
                 <a href="index.html" class="logo" aria-label="Taxi Julien - Accueil">
-                    <span class="logo-icon" aria-hidden="true">🚖</span>
+                    <span class="logo-icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2-4H8L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/>
+                            <circle cx="7" cy="17" r="2"/>
+                            <circle cx="17" cy="17" r="2"/>
+                            <path d="M5 10h14"/>
+                            <path d="M9 5v2"/>
+                            <path d="M15 5v2"/>
+                        </svg>
+                    </span>
                     <span>Taxi Julien</span>
                 </a>
 
                 <button class="mobile-menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-menu">
-                    <span aria-hidden="true">☰</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
                 </button>
 
                 <ul class="nav-menu" id="nav-menu" role="menubar">
@@ -241,7 +252,10 @@
     <!-- BANDEAU TÉLÉPHONE STICKY -->
     <div class="phone-bar">
         <a href="tel:+33123456789">
-            📞 Appelez-nous : 01 23 45 67 89
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Appelez-nous : 01 23 45 67 89
         </a>
     </div>
 
@@ -249,19 +263,124 @@
     <main id="main-content">
     <section class="hero" role="region" aria-label="Accueil">
         <div class="container hero-content">
-            <h1>Taxi Conventionné à Martigues</h1>
-            <p class="hero-subtitle">Votre transport médical et vos trajets quotidiens en toute sérénité</p>
+            <h1>Taxi Conventionné CPAM à Martigues</h1>
+            <p class="hero-subtitle">Vos trajets médicaux pris en charge par la Sécurité Sociale</p>
 
             <div class="badges-container">
-                <span class="badge">✓ Agréé CPAM</span>
-                <span class="badge">✓ Disponible 24/7</span>
-                <span class="badge">✓ Véhicule Premium</span>
-                <span class="badge">✓ Ponctualité Garantie</span>
+                <span class="badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Agréé CPAM</span>
+                <span class="badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Remboursement garanti</span>
+                <span class="badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Formalités simplifiées</span>
             </div>
 
-            <div class="cta-buttons">
-                <a href="reservation.html" class="btn btn-primary btn-large">Réserver un Taxi</a>
-                <a href="simulateur.html" class="btn btn-secondary btn-large">Estimer un Trajet</a>
+            <!-- CTA principal unique -->
+            <div class="cta-buttons" style="margin-top: var(--space-8);">
+                <a href="reservation.html" class="btn btn-primary btn-large" style="font-size: 1.25rem; padding: var(--space-5) var(--space-12);">Réserver un Transport Médical</a>
+            </div>
+
+            <!-- Mention secondaire autres services -->
+            <p style="margin-top: var(--space-6); font-size: 0.875rem; opacity: 0.8; color: white;">
+                Également disponible : Aéroports, Gares, Longues distances
+            </p>
+        </div>
+    </section>
+
+    <!-- BLOC AVIS GOOGLE -->
+    <section class="google-reviews-section">
+        <div class="container">
+            <div class="google-reviews-header">
+                <div class="google-logo">
+                    <svg viewBox="0 0 24 24" width="28" height="28">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span style="font-size: 1.25rem; font-weight: 600; color: var(--gray-700);">Avis Google</span>
+                </div>
+                <div class="google-rating">
+                    <span class="google-rating-score">4.9</span>
+                    <div class="google-stars">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="google-rating-count">87 avis</span>
+                </div>
+            </div>
+
+            <!-- Desktop: grille 3 colonnes | Mobile: carrousel swipe -->
+            <div class="reviews-carousel" data-reviews-carousel>
+                <div class="reviews-track" data-reviews-track>
+                    <div class="review-card" data-review-card>
+                        <div class="review-header">
+                            <div class="review-avatar">M</div>
+                            <div class="review-author">
+                                <span class="review-name">Marie L.</span>
+                                <span class="review-date">il y a 2 semaines</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                        <p class="review-text">"Service impeccable pour mes rendez-vous médicaux. Julien est toujours ponctuel et très professionnel. La prise en charge CPAM se fait sans aucun souci."</p>
+                    </div>
+
+                    <div class="review-card" data-review-card>
+                        <div class="review-header">
+                            <div class="review-avatar">P</div>
+                            <div class="review-author">
+                                <span class="review-name">Pierre D.</span>
+                                <span class="review-date">il y a 1 mois</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                        <p class="review-text">"Excellent transfert vers l'aéroport de Marseille. Chauffeur très agréable, véhicule propre et confortable. Prix correct, je recommande !"</p>
+                    </div>
+
+                    <div class="review-card" data-review-card>
+                        <div class="review-header">
+                            <div class="review-avatar">S</div>
+                            <div class="review-author">
+                                <span class="review-name">Sophie M.</span>
+                                <span class="review-date">il y a 3 semaines</span>
+                            </div>
+                        </div>
+                        <div class="review-stars">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FBBC05"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                        <p class="review-text">"Ma mère utilise ce service pour ses séances de dialyse. Toujours à l'heure, très attentionné avec les personnes âgées. Un vrai professionnel de confiance."</p>
+                    </div>
+                </div>
+                <!-- Dots pour mobile uniquement -->
+                <div class="reviews-dots" data-reviews-dots></div>
+            </div>
+
+            <div class="text-center" style="margin-top: var(--space-6);">
+                <a href="https://www.google.com/search?q=taxi+julien+martigues+avis" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Voir tous les avis sur Google
+                </a>
             </div>
         </div>
     </section>
@@ -276,19 +395,42 @@
 
             <div class="cards-grid">
                 <div class="card">
-                    <span class="card-icon">🏥</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18"/>
+                            <path d="M5 21V7l8-4v18"/>
+                            <path d="M19 21V11l-6-4"/>
+                            <path d="M9 9v.01"/>
+                            <path d="M9 12v.01"/>
+                            <path d="M9 15v.01"/>
+                            <path d="M9 18v.01"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Consultations Médicales</h3>
                     <p class="card-text">Rendez-vous chez le médecin, spécialiste, centre de soins ou hôpital en toute tranquillité.</p>
                 </div>
 
                 <div class="card">
-                    <span class="card-icon">💳</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Remboursement CPAM</h3>
                     <p class="card-text">Service agréé Sécurité Sociale. Vos trajets sont pris en charge selon vos droits.</p>
                 </div>
 
                 <div class="card">
-                    <span class="card-icon">📋</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Formalités Simplifiées</h3>
                     <p class="card-text">Nous nous occupons de toute la partie administrative. Apportez simplement votre prescription.</p>
                 </div>
@@ -372,28 +514,53 @@
 
             <div class="cards-grid">
                 <div class="card">
-                    <span class="card-icon">🏥</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18"/>
+                            <path d="M5 21V7l8-4v18"/>
+                            <path d="M19 21V11l-6-4"/>
+                            <path d="M9 9v.01"/>
+                            <path d="M9 12v.01"/>
+                            <path d="M9 15v.01"/>
+                            <path d="M9 18v.01"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Transport Conventionné</h3>
                     <p class="card-text">Trajets médicaux pris en charge par la CPAM avec toutes les formalités administratives.</p>
                     <a href="conventionne.html" style="color: var(--accent-dark); font-weight: 600;">En savoir plus →</a>
                 </div>
 
                 <div class="card">
-                    <span class="card-icon">✈️</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Aéroports & Gares</h3>
                     <p class="card-text">Transferts vers Marseille Provence, Aéroport de Nîmes, Gare TGV Aix-en-Provence, Avignon...</p>
                     <a href="aeroports-gares.html" style="color: var(--accent-dark); font-weight: 600;">Voir les tarifs →</a>
                 </div>
 
                 <div class="card">
-                    <span class="card-icon">🗺️</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+                            <line x1="9" y1="3" x2="9" y2="18"/>
+                            <line x1="15" y1="6" x2="15" y2="21"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Longues Distances</h3>
                     <p class="card-text">Déplacements interrégionaux, déménagements, voyages d'affaires partout en France.</p>
                     <a href="longues-distances.html" style="color: var(--accent-dark); font-weight: 600;">Demander un devis →</a>
                 </div>
 
                 <div class="card">
-                    <span class="card-icon">🌙</span>
+                    <span class="card-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </span>
                     <h3 class="card-title">Service 24/7</h3>
                     <p class="card-text">Disponible jour et nuit, week-end et jours fériés. Nous sommes toujours là pour vous.</p>
                     <a href="reservation.html" style="color: var(--accent-dark); font-weight: 600;">Réserver maintenant →</a>
@@ -402,137 +569,119 @@
         </div>
     </section>
 
-    <!-- POURQUOI NOUS CHOISIR -->
-    <section class="section features">
+    <!-- POURQUOI NOUS CHOISIR - Benefits Section -->
+    <section class="benefits-section" data-benefits>
         <div class="container">
             <div class="section-title">
                 <h2>Pourquoi Choisir Taxi Julien ?</h2>
+                <p>Un service de qualité pour tous vos trajets à Martigues et alentours</p>
             </div>
 
-            <div class="cards-grid">
-                <div class="feature-item">
-                    <span class="feature-icon">⭐</span>
-                    <div class="feature-content">
-                        <h3>Ponctualité Garantie</h3>
-                        <p>Nous respectons vos horaires et arrivons toujours à l'heure pour vos rendez-vous importants.</p>
-                    </div>
-                </div>
+            <!-- Carrousel horizontal avec défilement infini -->
+            <div class="benefits-carousel-container">
+                <div class="benefits-carousel">
+                    <div class="benefits-carousel-wrapper">
+                        <div class="benefits-track" data-benefits-track>
+                            <!-- Card 1: Tarifs Transparents -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="12" y1="1" x2="12" y2="23"/>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Tarifs Transparents</h3>
+                                <p class="benefit-card-desc">Prix conformes à la réglementation, sans surprise. Estimation précise disponible.</p>
+                            </div>
 
-                <div class="feature-item">
-                    <span class="feature-icon">🚗</span>
-                    <div class="feature-content">
-                        <h3>Véhicule Confortable</h3>
-                        <p>Taxi premium climatisé, propre et régulièrement entretenu pour votre confort.</p>
-                    </div>
-                </div>
+                            <!-- Card 2: Véhicule Confortable -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2-4H8L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/>
+                                        <circle cx="7" cy="17" r="2"/>
+                                        <circle cx="17" cy="17" r="2"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Véhicule Confortable</h3>
+                                <p class="benefit-card-desc">Taxi premium climatisé, propre et régulièrement entretenu.</p>
+                            </div>
 
-                <div class="feature-item">
-                    <span class="feature-icon">👨‍✈️</span>
-                    <div class="feature-content">
-                        <h3>Chauffeur Professionnel</h3>
-                        <p>Expérimenté, courtois et connaissance parfaite de la région Martigues et Bouches-du-Rhône.</p>
-                    </div>
-                </div>
+                            <!-- Card 3: Ponctualité Garantie -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Ponctualité Garantie</h3>
+                                <p class="benefit-card-desc">Nous respectons vos horaires et arrivons toujours à l'heure.</p>
+                            </div>
 
-                <div class="feature-item">
-                    <span class="feature-icon">💶</span>
-                    <div class="feature-content">
-                        <h3>Tarifs Transparents</h3>
-                        <p>Prix conformes à la réglementation, sans surprise. Utilisez notre simulateur pour une estimation précise.</p>
-                    </div>
-                </div>
+                            <!-- Card 4: Chauffeur Professionnel -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Chauffeur Professionnel</h3>
+                                <p class="benefit-card-desc">Expérimenté, courtois et connaissance parfaite de la région.</p>
+                            </div>
 
-                <div class="feature-item">
-                    <span class="feature-icon">🔒</span>
-                    <div class="feature-content">
-                        <h3>Sécurité Maximum</h3>
-                        <p>Assurance professionnelle, respect du code de la route et conduite sécurisée.</p>
-                    </div>
-                </div>
+                            <!-- Card 5: Sécurité Maximum -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        <polyline points="9 12 11 14 15 10"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Sécurité Maximum</h3>
+                                <p class="benefit-card-desc">Assurance professionnelle et conduite sécurisée.</p>
+                            </div>
 
-                <div class="feature-item">
-                    <span class="feature-icon">📱</span>
-                    <div class="feature-content">
-                        <h3>Réservation Facile</h3>
-                        <p>Par téléphone, WhatsApp ou directement en ligne via notre formulaire de réservation.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CARROUSEL DESTINATIONS - Swiper Fullscreen -->
-    <section class="swiper-showcase-section">
-        <div class="section-title">
-            <h2>Nos Destinations</h2>
-            <p>Découvrez les lieux que nous desservons au quotidien</p>
-        </div>
-
-        <div class="swiper swiper-showcase">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1564594736624-def7a10ab047?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Aéroport Marseille Provence</h3>
-                            <p>Transferts quotidiens vers l'aéroport international</p>
+                            <!-- Card 6: Réservation Facile -->
+                            <div class="benefit-card" data-benefit-card>
+                                <div class="benefit-card-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                        <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                    </svg>
+                                </div>
+                                <h3 class="benefit-card-title">Réservation Facile</h3>
+                                <p class="benefit-card-desc">Téléphone, WhatsApp ou en ligne 24h/24.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1561626423-a51b45aef0a1?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Gare TGV Aix-en-Provence</h3>
-                            <p>Connexion directe avec le réseau TGV</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Martigues - La Venise Provençale</h3>
-                            <p>Notre ville d'origine, au cœur de la Côte Bleue</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Marseille Vieux-Port</h3>
-                            <p>La capitale phocéenne et tous ses quartiers</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Aix-en-Provence</h3>
-                            <p>Ville d'art, de culture et d'histoire</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=1200&q=80');">
-                        <div class="slide-overlay"></div>
-                        <div class="slide-content">
-                            <h3>Hôpitaux & Cliniques</h3>
-                            <p>Transport médical conventionné CPAM</p>
-                        </div>
-                    </div>
-                </div>
+
+                <!-- Arrows outside carousel -->
+                <button class="benefits-arrow benefits-arrow-prev" data-benefits-prev aria-label="Précédent">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+                <button class="benefits-arrow benefits-arrow-next" data-benefits-next aria-label="Suivant">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
             </div>
 
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
+            <!-- CTAs -->
+            <div class="benefits-cta">
+                <a href="reservation.html" class="btn btn-primary btn-large">Réserver maintenant</a>
+                <a href="tel:+33123456789" class="btn btn-secondary btn-large">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    Appeler
+                </a>
+            </div>
         </div>
-
-        <!-- Navigation arrows (outside swiper for proper positioning) -->
-        <div class="swiper-nav-prev"><span></span></div>
-        <div class="swiper-nav-next"><span></span></div>
     </section>
 
     <!-- ZONE D'INTERVENTION -->
@@ -546,28 +695,28 @@
             <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow-md); max-width: 800px; margin: 0 auto;">
                 <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; list-style: none;">
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Martigues
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Martigues
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Port-de-Bouc
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Port-de-Bouc
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Istres
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Istres
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Fos-sur-Mer
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Fos-sur-Mer
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Marseille
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Marseille
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Aix-en-Provence
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Aix-en-Provence
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Salon-de-Provence
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Salon-de-Provence
                     </li>
                     <li style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="color: var(--secondary-color);">✓</span> Toute la France
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Toute la France
                     </li>
                 </ul>
             </div>
@@ -581,7 +730,7 @@
             <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.95;">Réservez en ligne ou appelez-nous directement</p>
             <div class="cta-buttons">
                 <a href="reservation.html" class="btn btn-primary btn-large">Réserver en Ligne</a>
-                <a href="tel:+33123456789" class="btn btn-secondary btn-large">📞 Appeler Maintenant</a>
+                <a href="tel:+33123456789" class="btn btn-secondary btn-large"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Appeler Maintenant</a>
             </div>
         </div>
     </section>
@@ -615,10 +764,10 @@
                 <div class="footer-section">
                     <h3>Contact</h3>
                     <ul>
-                        <li>📞 <a href="tel:+33123456789">01 23 45 67 89</a></li>
-                        <li>📧 <a href="mailto:contact@taxijulien.fr">contact@taxijulien.fr</a></li>
-                        <li>📍 Martigues, Bouches-du-Rhône (13)</li>
-                        <li>🕒 Disponible 24h/24, 7j/7</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+33123456789">01 23 45 67 89</a></li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:contact@taxijulien.fr">contact@taxijulien.fr</a></li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Martigues, Bouches-du-Rhône (13)</li>
+                        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Disponible 24h/24, 7j/7</li>
                     </ul>
                 </div>
 
@@ -628,8 +777,9 @@
                     <p>Disponible jour et nuit<br>
                     Week-end et jours fériés</p>
                     <p style="margin-top: 1rem;">
-                        <a href="https://wa.me/33123456789" style="display: inline-block; background: #25d366; color: white; padding: 0.5rem 1rem; border-radius: 5px; margin-top: 0.5rem;">
-                            💬 WhatsApp
+                        <a href="https://wa.me/33123456789" style="display: inline-flex; align-items: center; gap: 6px; background: #25d366; color: white; padding: 0.5rem 1rem; border-radius: 5px; margin-top: 0.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            WhatsApp
                         </a>
                     </p>
                 </div>
@@ -641,11 +791,20 @@
         </div>
     </footer>
 
+    <!-- Sticky CTA Mobile -->
+    <div class="sticky-cta-mobile">
+        <a href="tel:+33123456789" class="btn btn-call">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Appeler
+        </a>
+        <a href="reservation.html" class="btn btn-book">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Réserver
+        </a>
+    </div>
+
     <!-- Scripts -->
     <script src="js/main.js"></script>
-
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
         // Script simulateur rapide (version simplifiée pour la page d'accueil)
@@ -660,82 +819,239 @@
             }, 500);
         });
 
-        // Swiper Showcase - Carrousel plein écran style Webflow
-        const swiperShowcase = new Swiper('.swiper-showcase', {
-            // Configuration de base
-            slidesPerView: 'auto',
-            centeredSlides: true,
-            spaceBetween: 30,
-            loop: true,
-            speed: 600,
-            grabCursor: true,
+        /**
+         * Reviews Carousel - Dots pour mobile (scroll-snap natif)
+         */
+        (function() {
+            const carousel = document.querySelector('[data-reviews-carousel]');
+            if (!carousel) return;
 
-            // Effet de transition
-            effect: 'coverflow',
-            coverflowEffect: {
-                rotate: 0,
-                stretch: 0,
-                depth: 100,
-                modifier: 2,
-                slideShadows: false,
-            },
+            const track = carousel.querySelector('[data-reviews-track]');
+            const dotsContainer = carousel.querySelector('[data-reviews-dots]');
+            const cards = carousel.querySelectorAll('[data-review-card]');
 
-            // Navigation clavier
-            keyboard: {
-                enabled: true,
-                onlyInViewport: true,
-            },
+            if (!track || !dotsContainer || cards.length === 0) return;
 
-            // Molette de souris
-            mousewheel: {
-                forceToAxis: true,
-                sensitivity: 1,
-                releaseOnEdges: true,
-            },
+            // Créer les dots
+            cards.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'reviews-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', `Avis ${i + 1}`);
+                dot.addEventListener('click', () => {
+                    cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                });
+                dotsContainer.appendChild(dot);
+            });
 
-            // Pagination
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                dynamicBullets: true,
-            },
+            const dots = dotsContainer.querySelectorAll('.reviews-dot');
 
-            // Autoplay optionnel
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-            },
+            // Observer le scroll pour mettre à jour les dots
+            let scrollTimeout;
+            track.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const scrollLeft = track.scrollLeft;
+                    const cardWidth = cards[0].offsetWidth + parseInt(getComputedStyle(track).gap);
+                    const activeIndex = Math.round(scrollLeft / cardWidth);
 
-            // Breakpoints responsive
-            breakpoints: {
-                320: {
-                    slidesPerView: 1,
-                    spaceBetween: 16,
-                    effect: 'slide',
-                },
-                769: {
-                    slidesPerView: 1.8,
-                    spaceBetween: 24,
-                    effect: 'coverflow',
-                },
-                1024: {
-                    slidesPerView: 2.2,
-                    spaceBetween: 30,
-                },
-                1400: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 40,
-                },
-            },
-        });
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === activeIndex);
+                    });
+                }, 50);
+            });
+        })();
 
-        // Custom navigation arrows
-        document.querySelector('.swiper-nav-prev')?.addEventListener('click', () => {
-            swiperShowcase.slidePrev();
-        });
-        document.querySelector('.swiper-nav-next')?.addEventListener('click', () => {
-            swiperShowcase.slideNext();
+        /**
+         * BenefitsCarousel - Carrousel horizontal avec défilement infini naturel
+         * Utilise la technique de clonage pour un défilement sans fin fluide
+         */
+        class BenefitsCarousel {
+            constructor(section) {
+                this.section = section;
+                this.track = section.querySelector('[data-benefits-track]');
+                this.prevBtn = section.querySelector('[data-benefits-prev]');
+                this.nextBtn = section.querySelector('[data-benefits-next]');
+
+                if (!this.track) return;
+
+                // Cartes originales (avant clonage)
+                this.originalCards = [...this.track.querySelectorAll('[data-benefit-card]')];
+                this.totalOriginal = this.originalCards.length;
+                this.currentIndex = 0;
+                this.cardWidth = 0;
+                this.gap = 20;
+                this.visibleCards = 3;
+                this.isMobile = window.innerWidth <= 768;
+                this.isAnimating = false;
+
+                this.init();
+            }
+
+            init() {
+                this.updateDimensions();
+                this.setupClones();
+                this.bindEvents();
+                this.updateButtons();
+
+                // Positionner sur la première vraie carte (après les clones du début)
+                if (!this.isMobile && this.totalOriginal > this.visibleCards) {
+                    this.currentIndex = this.visibleCards;
+                    this.setPosition(this.currentIndex, false);
+                }
+
+                window.addEventListener('resize', this.handleResize.bind(this));
+            }
+
+            updateDimensions() {
+                if (this.originalCards.length === 0) return;
+
+                this.cardWidth = this.originalCards[0].offsetWidth;
+                this.gap = parseInt(getComputedStyle(this.track).gap) || 20;
+
+                if (window.innerWidth >= 1024) {
+                    this.visibleCards = 3;
+                } else if (window.innerWidth >= 769) {
+                    this.visibleCards = 2;
+                } else {
+                    this.visibleCards = 1;
+                }
+            }
+
+            setupClones() {
+                // Supprimer les anciens clones
+                this.track.querySelectorAll('[data-clone]').forEach(el => el.remove());
+
+                if (this.isMobile || this.totalOriginal <= this.visibleCards) return;
+
+                // Nombre de clones nécessaires de chaque côté
+                const clonesNeeded = this.visibleCards;
+
+                // Clones au DÉBUT : on clone les DERNIÈRES cartes
+                // Insertion dans l'ordre inverse pour maintenir l'ordre correct
+                for (let i = 0; i < clonesNeeded; i++) {
+                    const sourceIndex = this.totalOriginal - clonesNeeded + i;
+                    const clone = this.originalCards[sourceIndex].cloneNode(true);
+                    clone.setAttribute('data-clone', 'start');
+                    clone.removeAttribute('data-benefit-card');
+                    // Insérer au début, après les clones déjà insérés
+                    const firstOriginal = this.track.querySelector('[data-benefit-card]');
+                    this.track.insertBefore(clone, firstOriginal);
+                }
+
+                // Clones à la FIN : on clone les PREMIÈRES cartes
+                for (let i = 0; i < clonesNeeded; i++) {
+                    const clone = this.originalCards[i].cloneNode(true);
+                    clone.setAttribute('data-clone', 'end');
+                    clone.removeAttribute('data-benefit-card');
+                    this.track.appendChild(clone);
+                }
+            }
+
+            bindEvents() {
+                this.prevBtn?.addEventListener('click', () => this.prev());
+                this.nextBtn?.addEventListener('click', () => this.next());
+
+                this.track.addEventListener('transitionend', (e) => {
+                    if (e.propertyName === 'transform') {
+                        this.onTransitionEnd();
+                    }
+                });
+
+                this.section.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                });
+            }
+
+            prev() {
+                if (this.isAnimating || this.isMobile) return;
+                this.currentIndex--;
+                this.setPosition(this.currentIndex, true);
+            }
+
+            next() {
+                if (this.isAnimating || this.isMobile) return;
+                this.currentIndex++;
+                this.setPosition(this.currentIndex, true);
+            }
+
+            setPosition(index, animate = true) {
+                const offset = -(index * (this.cardWidth + this.gap));
+
+                if (animate) {
+                    this.isAnimating = true;
+                    this.track.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                } else {
+                    this.track.style.transition = 'none';
+                }
+
+                this.track.style.transform = `translateX(${offset}px)`;
+
+                if (!animate) {
+                    // Force reflow pour appliquer immédiatement
+                    this.track.offsetHeight;
+                    this.track.style.transition = '';
+                    this.isAnimating = false;
+                }
+            }
+
+            onTransitionEnd() {
+                this.isAnimating = false;
+
+                if (this.isMobile || this.totalOriginal <= this.visibleCards) return;
+
+                const clonesCount = this.visibleCards;
+                const firstRealIndex = clonesCount;
+                const lastRealIndex = clonesCount + this.totalOriginal - 1;
+
+                // Si on est sur un clone du DÉBUT (indices 0 à clonesCount-1)
+                // Sauter vers la position équivalente à la fin des vraies cartes
+                if (this.currentIndex < firstRealIndex) {
+                    const offset = firstRealIndex - this.currentIndex;
+                    this.currentIndex = lastRealIndex - offset + 1;
+                    this.setPosition(this.currentIndex, false);
+                }
+                // Si on est sur un clone de la FIN (indices > lastRealIndex)
+                // Sauter vers la position équivalente au début des vraies cartes
+                else if (this.currentIndex > lastRealIndex) {
+                    const offset = this.currentIndex - lastRealIndex;
+                    this.currentIndex = firstRealIndex + offset - 1;
+                    this.setPosition(this.currentIndex, false);
+                }
+            }
+
+            handleResize() {
+                const wasMobile = this.isMobile;
+                this.isMobile = window.innerWidth <= 768;
+
+                this.updateDimensions();
+
+                if (wasMobile !== this.isMobile) {
+                    this.setupClones();
+                    if (!this.isMobile && this.totalOriginal > this.visibleCards) {
+                        this.currentIndex = this.visibleCards;
+                        this.setPosition(this.currentIndex, false);
+                    } else {
+                        this.currentIndex = 0;
+                        this.setPosition(0, false);
+                    }
+                } else if (!this.isMobile) {
+                    this.setPosition(this.currentIndex, false);
+                }
+
+                this.updateButtons();
+            }
+
+            updateButtons() {
+                const shouldHide = this.isMobile || this.totalOriginal <= this.visibleCards;
+                if (this.prevBtn) this.prevBtn.style.display = shouldHide ? 'none' : '';
+                if (this.nextBtn) this.nextBtn.style.display = shouldHide ? 'none' : '';
+            }
+        }
+
+        // Initialize all Benefits sections
+        document.querySelectorAll('[data-benefits]').forEach(section => {
+            new BenefitsCarousel(section);
         });
     </script>
 </body>

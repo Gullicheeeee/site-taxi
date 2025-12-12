@@ -119,17 +119,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// SCROLL HEADER (smart header avec shrink effect)
+// SCROLL HEADER (shrink effect - header toujours visible)
 // ============================================
 
 (function() {
     const header = document.querySelector('.header');
     if (!header) return;
 
-    let lastScrollY = 0;
     let ticking = false;
     const scrollThreshold = 100;
-    const hideThreshold = 300;
 
     function updateHeader() {
         const currentScrollY = window.scrollY;
@@ -141,20 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             header.classList.remove('header--scrolled');
         }
 
-        // Hide/show header based on scroll direction (only after hideThreshold)
-        if (currentScrollY > hideThreshold) {
-            if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 5) {
-                // Scrolling down - hide header
-                header.classList.add('header--hidden');
-            } else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 5) {
-                // Scrolling up - show header
-                header.classList.remove('header--hidden');
-            }
-        } else {
-            header.classList.remove('header--hidden');
-        }
-
-        lastScrollY = currentScrollY;
+        // Header reste TOUJOURS visible (plus de hide sur scroll)
         ticking = false;
     }
 
