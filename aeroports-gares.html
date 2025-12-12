@@ -330,49 +330,209 @@
         </div>
     </section>
 
-    <!-- AVANTAGES -->
-    <section class="section">
+    <!-- AVANTAGES - Benefits Section -->
+    <section class="benefits-section" data-benefits>
         <div class="container">
             <div class="section-title">
-                <h2>Pourquoi Nous Choisir ?</h2>
+                <h2>Pourquoi choisir notre service ?</h2>
+                <p>Un service premium pour des transferts sans stress</p>
             </div>
 
-            <div class="cards-grid">
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-                    <h3 class="card-title">Ponctualité Absolue</h3>
-                    <p>Nous suivons votre vol ou train en temps réel. En cas de retard, nous ajustons automatiquement votre prise en charge.</p>
+            <!-- Desktop: 3 Featured Cards (statiques) -->
+            <div class="benefits-featured">
+                <!-- Featured 1: Tarif Forfaitaire (priorité) -->
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-card-title">Tarif Forfaitaire</h3>
+                    <p class="benefit-card-desc">Prix fixe annoncé à l'avance, pas de surprise. Péages et attentes raisonnables inclus dans le tarif.</p>
                 </div>
 
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></span>
-                    <h3 class="card-title">Accueil Personnalisé</h3>
-                    <p>Pour les arrivées aéroport, possibilité d'accueil avec panneau nominatif au terminal (sur demande).</p>
+                <!-- Featured 2: Confort Maximum -->
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2-4H8L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/>
+                            <circle cx="7" cy="17" r="2"/>
+                            <circle cx="17" cy="17" r="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-card-title">Confort Maximum</h3>
+                    <p class="benefit-card-desc">Véhicule climatisé, sièges confortables, espace pour les jambes. Voyage reposant avant ou après votre vol.</p>
                 </div>
 
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
-                    <h3 class="card-title">Aide aux Bagages</h3>
-                    <p>Assistance complète pour vos bagages, du chargement au déchargement. Coffre spacieux pour tous types de valises.</p>
+                <!-- Featured 3: Aide aux Bagages -->
+                <div class="benefit-card">
+                    <div class="benefit-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <h3 class="benefit-card-title">Aide aux Bagages</h3>
+                    <p class="benefit-card-desc">Assistance complète pour vos bagages, du chargement au déchargement. Coffre spacieux pour tous types de valises.</p>
+                </div>
+            </div>
+
+            <!-- Desktop: Overflow Carousel (3 items supplémentaires) -->
+            <div class="benefits-overflow" data-count="3">
+                <p class="benefits-overflow-label">Découvrez également</p>
+                <div class="benefits-carousel-wrapper">
+                    <div class="benefits-carousel-track" data-benefits-track>
+                        <!-- Overflow 1: Ponctualité -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Ponctualité Absolue</h3>
+                            <p class="benefit-card-desc">Nous suivons votre vol ou train en temps réel. En cas de retard, nous ajustons automatiquement votre prise en charge.</p>
+                        </div>
+
+                        <!-- Overflow 2: Accueil Personnalisé -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Accueil Personnalisé</h3>
+                            <p class="benefit-card-desc">Pour les arrivées aéroport, possibilité d'accueil avec panneau nominatif au terminal (sur demande).</p>
+                        </div>
+
+                        <!-- Overflow 3: Communication -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Communication Facile</h3>
+                            <p class="benefit-card-desc">SMS de confirmation, contact direct avec le chauffeur, suivi en temps réel de votre transfert.</p>
+                        </div>
+                    </div>
+
+                    <!-- Arrows -->
+                    <button class="benefits-arrow benefits-arrow-prev" data-benefits-prev aria-label="Avantages précédents" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <button class="benefits-arrow benefits-arrow-next" data-benefits-next aria-label="Avantages suivants">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2-4H8L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></span>
-                    <h3 class="card-title">Confort Maximum</h3>
-                    <p>Véhicule climatisé, sièges confortables, espace pour les jambes. Voyage reposant avant ou après votre vol.</p>
+                <!-- Dots -->
+                <div class="benefits-dots" data-benefits-dots>
+                    <button class="benefits-dot active" aria-label="Page 1" data-index="0"></button>
+                    <button class="benefits-dot" aria-label="Page 2" data-index="1"></button>
+                    <button class="benefits-dot" aria-label="Page 3" data-index="2"></button>
                 </div>
+            </div>
 
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-                    <h3 class="card-title">Tarif Forfaitaire</h3>
-                    <p>Prix fixe annoncé à l'avance, pas de surprise. Péages et attentes raisonnables inclus dans le tarif.</p>
+            <!-- Mobile: Full Carousel (toutes les cards) -->
+            <div class="benefits-mobile-carousel">
+                <div class="benefits-mobile-wrapper">
+                    <div class="benefits-mobile-track">
+                        <!-- Card 1 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Tarif Forfaitaire</h3>
+                            <p class="benefit-card-desc">Prix fixe annoncé à l'avance, pas de surprise. Péages et attentes raisonnables inclus.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2-4H8L6 10l-2.5 1.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/>
+                                    <circle cx="7" cy="17" r="2"/>
+                                    <circle cx="17" cy="17" r="2"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Confort Maximum</h3>
+                            <p class="benefit-card-desc">Véhicule climatisé, sièges confortables. Voyage reposant avant ou après votre vol.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Aide aux Bagages</h3>
+                            <p class="benefit-card-desc">Assistance complète pour vos bagages. Coffre spacieux pour tous types de valises.</p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Ponctualité Absolue</h3>
+                            <p class="benefit-card-desc">Nous suivons votre vol ou train en temps réel et ajustons votre prise en charge.</p>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Accueil Personnalisé</h3>
+                            <p class="benefit-card-desc">Possibilité d'accueil avec panneau nominatif au terminal (sur demande).</p>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="benefit-card">
+                            <div class="benefit-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                </svg>
+                            </div>
+                            <h3 class="benefit-card-title">Communication Facile</h3>
+                            <p class="benefit-card-desc">SMS de confirmation, contact direct avec le chauffeur, suivi en temps réel.</p>
+                        </div>
+                    </div>
                 </div>
+                <p class="benefits-swipe-hint">
+                    Faites glisser
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </p>
+            </div>
 
-                <div class="card">
-                    <span class="card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
-                    <h3 class="card-title">Communication Facile</h3>
-                    <p>SMS de confirmation, contact direct avec le chauffeur, suivi en temps réel de votre transfert.</p>
-                </div>
+            <!-- CTAs -->
+            <div class="benefits-cta">
+                <a href="reservation.html" class="btn btn-primary btn-large">Réserver maintenant</a>
+                <a href="tel:+33123456789" class="btn btn-secondary btn-large">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    Appeler
+                </a>
             </div>
         </div>
     </section>
@@ -533,5 +693,127 @@
     </div>
 
     <script src="js/main.js"></script>
+
+    <!-- Benefits Overflow Carousel -->
+    <script>
+    (function() {
+        'use strict';
+
+        class BenefitsCarousel {
+            constructor(section) {
+                this.section = section;
+                this.track = section.querySelector('[data-benefits-track]');
+                this.prevBtn = section.querySelector('[data-benefits-prev]');
+                this.nextBtn = section.querySelector('[data-benefits-next]');
+                this.dotsContainer = section.querySelector('[data-benefits-dots]');
+
+                if (!this.track) return;
+
+                this.cards = [...this.track.querySelectorAll('.benefit-card')];
+                this.dots = this.dotsContainer ? [...this.dotsContainer.querySelectorAll('.benefits-dot')] : [];
+                this.currentIndex = 0;
+                this.cardWidth = 0;
+                this.gap = 24;
+                this.visibleCards = 1;
+
+                this.init();
+            }
+
+            init() {
+                this.calculateDimensions();
+                this.bindEvents();
+                this.updateButtons();
+                this.updateDots();
+
+                window.addEventListener('resize', () => {
+                    this.calculateDimensions();
+                    this.goTo(this.currentIndex, false);
+                });
+            }
+
+            calculateDimensions() {
+                if (this.cards.length === 0) return;
+                this.cardWidth = this.cards[0].offsetWidth;
+                this.gap = parseInt(getComputedStyle(this.track).gap) || 24;
+
+                // Determine visible cards based on viewport
+                const wrapperWidth = this.track.parentElement.offsetWidth;
+                this.visibleCards = Math.floor(wrapperWidth / (this.cardWidth + this.gap)) || 1;
+            }
+
+            bindEvents() {
+                this.prevBtn?.addEventListener('click', () => this.prev());
+                this.nextBtn?.addEventListener('click', () => this.next());
+
+                // Keyboard navigation
+                this.section.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                });
+
+                // Dots
+                this.dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => this.goTo(index));
+                });
+            }
+
+            prev() {
+                if (this.currentIndex > 0) {
+                    this.goTo(this.currentIndex - 1);
+                }
+            }
+
+            next() {
+                const maxIndex = Math.max(0, this.cards.length - this.visibleCards);
+                if (this.currentIndex < maxIndex) {
+                    this.goTo(this.currentIndex + 1);
+                }
+            }
+
+            goTo(index, animate = true) {
+                const maxIndex = Math.max(0, this.cards.length - this.visibleCards);
+                this.currentIndex = Math.max(0, Math.min(index, maxIndex));
+
+                const offset = -(this.currentIndex * (this.cardWidth + this.gap));
+
+                if (!animate) {
+                    this.track.style.transition = 'none';
+                }
+
+                this.track.style.transform = `translateX(${offset}px)`;
+
+                if (!animate) {
+                    this.track.offsetHeight; // Force reflow
+                    this.track.style.transition = '';
+                }
+
+                this.updateButtons();
+                this.updateDots();
+            }
+
+            updateButtons() {
+                const maxIndex = Math.max(0, this.cards.length - this.visibleCards);
+
+                if (this.prevBtn) {
+                    this.prevBtn.disabled = this.currentIndex === 0;
+                }
+                if (this.nextBtn) {
+                    this.nextBtn.disabled = this.currentIndex >= maxIndex;
+                }
+            }
+
+            updateDots() {
+                this.dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentIndex);
+                });
+            }
+        }
+
+        // Initialize all Benefits sections
+        document.querySelectorAll('[data-benefits]').forEach(section => {
+            new BenefitsCarousel(section);
+        });
+    })();
+    </script>
 </body>
 </html>
